@@ -1,0 +1,15 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="StudentManager/StudentManager.cs">
+    <Files>
+      <File FileName="StudentManager/StudentManager.cs" Line="5" Column="25" />
+      <File FileName="StudentManager/Student.cs" Line="7" Column="30" />
+      <File FileName="StudentManager/Class.cs" Line="16" Column="17" />
+      <File FileName="StudentManager/Manager.cs" Line="39" Column="103" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
