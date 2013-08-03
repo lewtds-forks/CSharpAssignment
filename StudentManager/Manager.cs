@@ -28,7 +28,7 @@ namespace StudentManager
             }
         }
 
-        public IEnumerable<Class> AllClass
+        public IEnumerable<Class> AllClasses
         {
             get {
                 return this._AllClass;
