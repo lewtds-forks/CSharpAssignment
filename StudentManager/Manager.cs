@@ -7,6 +7,7 @@ namespace StudentManager
     public class Manager
     {
         private HashSet<Tuple<Class, Student>> ClassStudentRel;
+        private HashSet<Class> AllClass; // Should be a set based on Class.ID
 
         public Manager()
         {
@@ -27,6 +28,29 @@ namespace StudentManager
         {
             return this.RemoveStudentClass(s, frm) &&
                 this.AddStudentClass(s, to);
+        }
+
+        public Class FindClassOfStudent(Student s) {
+            return (from pair in ClassStudentRel
+                    where pair.Item2 == s
+                    select pair.Item1).FirstOrDefault();
+        }
+
+        public IEnumerable<Student> GetAllStudentFromClass(Class cl)
+        {
+            return (from pair in ClassStudentRel
+                    where pair.Item1 == cl
+                    select pair.Item2);
+        }
+
+        public bool RegisterClass(Class cl)
+        {
+            return this.AllClass.Add(cl);
+        }
+
+        public bool RemoveClass(Class cl)
+        {
+            return this.AllClass.Remove(cl);
         }
     }
 }
