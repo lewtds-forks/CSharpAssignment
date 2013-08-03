@@ -7,7 +7,7 @@ namespace StudentManager
     public class Manager
     {
         private HashSet<Tuple<Class, Student>> _ClassStudentRel;
-        private SortedSet<Class> AllClass;
+        private SortedSet<Class> _AllClass;
 
         /// <summary>
         /// Get all class-student relationships.
@@ -16,18 +16,38 @@ namespace StudentManager
         /// <value>A hashset containing tuples of Class and Student.</value>
         public HashSet<Tuple<Class, Student>> ClassStudentRel {
             get {
-                return HashSet<Tuple<Class, Student>>(_ClassStudentRel);
+                return new HashSet<Tuple<Class, Student>>(_ClassStudentRel);
+            }
+        }
+
+        public IEnumerable<Student> AllStudents
+        {
+            get {
+                return (from pair in _ClassStudentRel
+                        select pair.Item2);
+            }
+        }
+
+        public IEnumerable<Class> AllClass
+        {
+            get {
+                return this._AllClass;
             }
         }
 
         public Manager()
         {
             _ClassStudentRel = new HashSet<Tuple<Class, Student>>();
+            _AllClass = new SortedSet<Class>();
         }
 
         public bool AddStudentClass(Student s, Class cl)
         {
-            return _ClassStudentRel.Add(new Tuple<Class, Student> (cl, s));
+            // The student should not be in any other class and
+            // the class should already be registered
+            return this.FindStudentByID(s.ID) == null && 
+                this._AllClass.Contains(cl) &&
+                _ClassStudentRel.Add(new Tuple<Class, Student> (cl, s));
         }
 
         public bool RemoveStudentClass(Student s, Class cl)
@@ -56,12 +76,18 @@ namespace StudentManager
 
         public bool RegisterClass(Class cl)
         {
-            return this.AllClass.Add(cl);
+            return this._AllClass.Add(cl);
         }
 
         public bool RemoveClass(Class cl)
         {
-            return this.AllClass.Remove(cl);
+            return this._AllClass.Remove(cl);
+        }
+
+        public Student FindStudentByID(int id) {
+            return (from pair in _ClassStudentRel
+                    where pair.Item2.ID == id
+                    select pair.Item2).FirstOrDefault();
         }
     }
 }
