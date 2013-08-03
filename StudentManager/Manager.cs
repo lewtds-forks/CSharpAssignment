@@ -28,20 +28,6 @@ namespace StudentManager
             return this.RemoveStudentClass(s, frm) &&
                 this.AddStudentClass(s, to);
         }
-
-        public Student GetStudentFromID(int ID)
-        {
-            return (from tuple in ClassStudentRel
-                    where tuple.Item2.ID == ID
-                    select tuple.Item2).FirstOrDefault();
-        }
-
-        public Class GetClassFromID(int ID)
-        {
-            return (from tuple in ClassStudentRel 
-                    where tuple.Item1.ID == ID
-                    select tuple.Item1).FirstOrDefault();
-        }
     }
 }
 
