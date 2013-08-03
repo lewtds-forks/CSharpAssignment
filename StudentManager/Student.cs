@@ -12,7 +12,7 @@ namespace StudentManager
 
         public override string ToString()
         {
-            return String.Format("{0} {1} {2} {3}", ID, ClassID, Name, Address);
+            return String.Format("{0} {1} {2}", ID, Name, Address);
         }
     }
 }

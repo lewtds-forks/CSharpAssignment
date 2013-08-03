@@ -18,7 +18,7 @@ namespace StudentManager
             {
                 ID = 10
             };
-            m.AddStudentToClass(student, c);
+            m.AddStudentClass(student, c);
             Console.WriteLine(m.GetStudentFromID(5));
             Console.WriteLine(m.GetClassFromID(10));
             Console.WriteLine(student);
