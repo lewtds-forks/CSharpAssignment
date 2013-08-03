@@ -8,7 +8,7 @@ namespace StudentManager
 	
     }
 
-    public class Class
+    public class Class: IComparable<Class>, IEquatable<Class>
     {
         public int ID { get; set; }
 
@@ -20,9 +20,14 @@ namespace StudentManager
 
         public string Teacher { get; set; }
 
-        public Class()
+        public int CompareTo(Class other)
         {
+            return this.ID - other.ID;
+        }
 
+        public bool Equals(Class other)
+        {
+            return this.ID == other.ID;
         }
     }
 }
