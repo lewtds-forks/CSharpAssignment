@@ -13,20 +13,20 @@ namespace StudentManager
             ClassStudentRel = new HashSet<Tuple<Class, Student>>();
         }
 
-        public bool AddStudentToClass(Student s, Class cl)
+        public bool AddStudentClass(Student s, Class cl)
         {
             return ClassStudentRel.Add(new Tuple<Class, Student> (cl, s));
         }
 
-        public bool RemoveStudentFromClass(Student s, Class cl)
+        public bool RemoveStudentClass(Student s, Class cl)
         {
             return ClassStudentRel.Remove(new Tuple<Class, Student> (cl, s));
         }
 
-        public bool ChangeClass(Student s, Class frm, Class to)
+        public bool ChangeStudentClass(Student s, Class frm, Class to)
         {
-            return this.RemoveStudentFromClass(s, frm) &&
-                this.AddStudentToClass(s, to);
+            return this.RemoveStudentClass(s, frm) &&
+                this.AddStudentClass(s, to);
         }
 
         public Student GetStudentFromID(int ID)
