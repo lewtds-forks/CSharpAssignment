@@ -6,8 +6,9 @@ namespace StudentManager
 {
     public class Manager
     {
-        private HashSet<Tuple<Class, Student>> _ClassStudentRel;
+        private HashSet<Tuple<Class, Student>> classStudentRels;
         private SortedSet<Class> _AllClass;
+        private HashSet<Tuple<Class, Room, TimeSlot>> classRoomSlots;
 
         /// <summary>
         /// Get all class-student relationships.
@@ -16,14 +17,14 @@ namespace StudentManager
         /// <value>A hashset containing tuples of Class and Student.</value>
         public HashSet<Tuple<Class, Student>> ClassStudentRel {
             get {
-                return new HashSet<Tuple<Class, Student>>(_ClassStudentRel);
+                return new HashSet<Tuple<Class, Student>>(classStudentRels);
             }
         }
 
         public IEnumerable<Student> AllStudents
         {
             get {
-                return (from pair in _ClassStudentRel
+                return (from pair in classStudentRels
                         select pair.Item2);
             }
         }
@@ -31,13 +32,14 @@ namespace StudentManager
         public IEnumerable<Class> AllClasses
         {
             get {
-                return this._AllClass;
+                // ToList() to make it immutable
+                return this._AllClass.ToList();
             }
         }
 
         public Manager()
         {
-            _ClassStudentRel = new HashSet<Tuple<Class, Student>>();
+            classStudentRels = new HashSet<Tuple<Class, Student>>();
             _AllClass = new SortedSet<Class>();
         }
 
@@ -47,12 +49,12 @@ namespace StudentManager
             // the class should already be registered
             return this.FindStudentByID(s.ID) == null && 
                 this._AllClass.Contains(cl) &&
-                _ClassStudentRel.Add(new Tuple<Class, Student> (cl, s));
+                classStudentRels.Add(new Tuple<Class, Student> (cl, s));
         }
 
         public bool RemoveStudentClass(Student s, Class cl)
         {
-            return _ClassStudentRel.Remove(new Tuple<Class, Student> (cl, s));
+            return classStudentRels.Remove(new Tuple<Class, Student> (cl, s));
         }
 
         public bool ChangeStudentClass(Student s, Class frm, Class to)
@@ -62,14 +64,14 @@ namespace StudentManager
         }
 
         public Class FindClassOfStudent(Student s) {
-            return (from pair in _ClassStudentRel
+            return (from pair in classStudentRels
                     where pair.Item2 == s
                     select pair.Item1).FirstOrDefault();
         }
 
         public IEnumerable<Student> GetAllStudentFromClass(Class cl)
         {
-            return (from pair in _ClassStudentRel
+            return (from pair in classStudentRels
                     where pair.Item1 == cl
                     select pair.Item2);
         }
@@ -85,7 +87,7 @@ namespace StudentManager
         }
 
         public Student FindStudentByID(int id) {
-            return (from pair in _ClassStudentRel
+            return (from pair in classStudentRels
                     where pair.Item2.ID == id
                     select pair.Item2).FirstOrDefault();
         }
