@@ -133,8 +133,19 @@ namespace StudentManager
             Allocation = new HashSet<Tuple<Class, Room, TimeSlot>>();
         }
 
-        public Student GetStudentById(int id){}
-        public Class GetClassById(int id){}
+        public Student GetStudentById(int id)
+        {
+            return (from student in this.Students
+                    where student.ID == id
+                    select student).SingleOrDefault();
+        }
+
+        public Class GetClassById(int id)
+        {
+            return (from cl in this.Classes
+                    where cl.ID == id
+                    select cl).SingleOrDefault();
+        }
 
         public bool RegisterStudentWithClass(Student s, Class c) {}
         public bool RemoveStudentFromClass(Student s, Class c) {}
