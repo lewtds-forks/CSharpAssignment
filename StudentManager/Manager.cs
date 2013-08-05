@@ -7,7 +7,7 @@ namespace StudentManager
     public class Manager
     {
         private HashSet<Tuple<Class, Student>> classStudentRels;
-        private SortedSet<Class> _AllClass;
+        private SortedSet<Class> allClasses;
         private HashSet<Tuple<Class, Room, TimeSlot>> classRoomSlots;
 
         /// <summary>
@@ -33,14 +33,14 @@ namespace StudentManager
         {
             get {
                 // ToList() to make it immutable
-                return this._AllClass.ToList();
+                return this.allClasses.ToList();
             }
         }
 
         public Manager()
         {
             classStudentRels = new HashSet<Tuple<Class, Student>>();
-            _AllClass = new SortedSet<Class>();
+            allClasses = new SortedSet<Class>();
         }
 
         public bool AddStudentClass(Student s, Class cl)
@@ -48,7 +48,7 @@ namespace StudentManager
             // The student should not be in any other class and
             // the class should already be registered
             return this.FindStudentByID(s.ID) == null && 
-                this._AllClass.Contains(cl) &&
+                this.allClasses.Contains(cl) &&
                 classStudentRels.Add(new Tuple<Class, Student> (cl, s));
         }
 
@@ -78,12 +78,12 @@ namespace StudentManager
 
         public bool RegisterClass(Class cl)
         {
-            return this._AllClass.Add(cl);
+            return this.allClasses.Add(cl);
         }
 
         public bool RemoveClass(Class cl)
         {
-            return this._AllClass.Remove(cl);
+            return this.allClasses.Remove(cl);
         }
 
         public Student FindStudentByID(int id) {
