@@ -19,10 +19,6 @@ namespace StudentManager
 
         public string Name { get; set; }
 
-        public List<TimeSlot> TimeTable { get; set; }
-
-        public string Room { get; set; }
-
         public string Teacher { get; set; }
 
         public int CompareTo(Class other)
