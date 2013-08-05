@@ -157,22 +157,33 @@ namespace StudentManager
 
         public bool RegisterStudentWithClass(Student s, Class c)
         {
+            return this.Students.Contains(s) &&
+                this.Classes.Contains(c) &&
+                this.classStudents.Add(new Tuple<Class, Student>(c, s));
         }
 
         public bool RemoveStudentFromClass(Student s, Class c)
         {
+            return this.classStudents.Remove(new Tuple<Class, Student>(c, s));
         }
 
         public bool SwitchClassOfStudent(Student s, Class old, Class nw)
         {
+            return RemoveStudentFromClass(s, old) &&
+                RegisterStudentWithClass(s, nw);
         }
 
         public bool RegisterClassRoomTimeSlot(Class cl, Room r, TimeSlot t)
         {
+            return Classes.Contains(cl) &&
+                Rooms.Contains(r) &&
+                TimeSlots.Contains(t) &&
+                this.allocation.Add(new Tuple<Class, Room, TimeSlot>(cl, r, t));
         }
 
         public bool RemoveClassRoomTimeSlot(Class cl, Room r, TimeSlot t)
         {
+            return this.allocation.Remove(new Tuple<Class, Room, TimeSlot>(cl, r, t));
         }
     }
 }
