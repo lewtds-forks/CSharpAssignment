@@ -57,15 +57,15 @@ namespace StudentManager
                 classStudentRels.Add(new Tuple<Class, Student> (cl, s));
         }
 
-        public bool RemoveStudentClass(Student s, Class cl)
+        public bool RemoveStudentClass(Student student, Class clss)
         {
-            return classStudentRels.Remove(new Tuple<Class, Student> (cl, s));
+            return classStudentRels.Remove(new Tuple<Class, Student> (clss, student));
         }
 
-        public bool ChangeStudentClass(Student s, Class frm, Class to)
+        public bool ChangeStudentClass(Student student, Class frm, Class to)
         {
-            return this.RemoveStudentClass(s, frm) &&
-                this.AddStudentClass(s, to);
+            return this.RemoveStudentClass(student, frm) &&
+                this.AddStudentClass(student, to);
         }
 
         public Class FindClassOfStudent(Student s) {
@@ -74,21 +74,21 @@ namespace StudentManager
                     select pair.Item1).FirstOrDefault();
         }
 
-        public IEnumerable<Student> GetAllStudentFromClass(Class cl)
+        public IEnumerable<Student> GetAllStudentFromClass(Class clss)
         {
             return (from pair in classStudentRels
-                    where pair.Item1 == cl
+                    where pair.Item1 == clss
                     select pair.Item2);
         }
 
-        public bool RegisterClass(Class cl)
+        public bool RegisterClass(Class clss)
         {
-            return this.allClasses.Add(cl);
+            return this.allClasses.Add(clss);
         }
 
-        public bool RemoveClass(Class cl)
+        public bool RemoveClass(Class clss)
         {
-            return this.allClasses.Remove(cl);
+            return this.allClasses.Remove(clss);
         }
 
         public Student FindStudentByID(int id) {
@@ -97,13 +97,13 @@ namespace StudentManager
                     select pair.Item2).FirstOrDefault();
         }
 
-        public bool RegisterClassRoomSlot(Class cl, Room r, TimeSlot t)
+        public bool RegisterClassRoomSlot(Class clss, Room room, TimeSlot slot)
         {
             // TODO What about overlapping timeslots?
-            return this.allClasses.Contains(cl) &&
-                this.availableRooms.Contains(r) &&
-                this.availableTimeSlots.Contains(t) &&
-                this.classRoomSlots.Add(new Tuple<Class, Room, TimeSlot>(cl, r, t));
+            return this.allClasses.Contains(clss) &&
+                this.availableRooms.Contains(room) &&
+                this.availableTimeSlots.Contains(slot) &&
+                this.classRoomSlots.Add(new Tuple<Class, Room, TimeSlot>(clss, room, slot));
         }
     }
 }
