@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace StudentManager
 {
-
 //    public class Manager
 //    {
 //        private HashSet<Tuple<Class, Student>> classStudentRels;
@@ -115,13 +114,22 @@ namespace StudentManager
 
     class Manager
     {
-        public SortedSet<Class> Classes { get; }
-        public SortedSet<Student> Students { get; }
-        public HashSet<Room> Rooms { get; }
-        public HashSet<TimeSlot> TimeSlots { get; }
+        public SortedSet<Class> Classes { get; private set; }
 
-        public HashSet<Tuple<Class, Student>> ClassStudents { get; }
-        public HashSet<Tuple<Class, Room, TimeSlot>> Allocation { get; }
+        public SortedSet<Student> Students { get; private set; }
+
+        public HashSet<Room> Rooms { get; private set; }
+
+        public HashSet<TimeSlot> TimeSlots { get; private set; }
+
+        private HashSet<Tuple<Class, Student>> classStudents;
+        private HashSet<Tuple<Class, Room, TimeSlot>> allocation;
+
+        public IEnumerable<Tuple<Class, Student>> ClassStudents
+        { get { return this.classStudents; } }
+
+        public IEnumerable<Tuple<Class, Room, TimeSlot>> Allocation
+        { get { return this.allocation; } }
 
         public Manager()
         {
@@ -129,8 +137,8 @@ namespace StudentManager
             Students = new SortedSet<Student>();
             Rooms = new HashSet<Room>();
             TimeSlots = new HashSet<TimeSlot>();
-            ClassStudents = new HashSet<Tuple<Class, Student>>();
-            Allocation = new HashSet<Tuple<Class, Room, TimeSlot>>();
+            classStudents = new HashSet<Tuple<Class, Student>>();
+            allocation = new HashSet<Tuple<Class, Room, TimeSlot>>();
         }
 
         public Student GetStudentById(int id)
@@ -147,12 +155,25 @@ namespace StudentManager
                     select cl).SingleOrDefault();
         }
 
-        public bool RegisterStudentWithClass(Student s, Class c) {}
-        public bool RemoveStudentFromClass(Student s, Class c) {}
-        public bool SwitchClassOfStudent(Student s, Class old, Class nw) {}
+        public bool RegisterStudentWithClass(Student s, Class c)
+        {
+        }
 
-        public bool RegisterClassRoomTimeSlot(Class cl, Room r, TimeSlot t) {}
-        public bool RemoveClassRoomTimeSlot(Class cl, Room r, TimeSlot t) {}
+        public bool RemoveStudentFromClass(Student s, Class c)
+        {
+        }
+
+        public bool SwitchClassOfStudent(Student s, Class old, Class nw)
+        {
+        }
+
+        public bool RegisterClassRoomTimeSlot(Class cl, Room r, TimeSlot t)
+        {
+        }
+
+        public bool RemoveClassRoomTimeSlot(Class cl, Room r, TimeSlot t)
+        {
+        }
     }
 }
 
