@@ -28,6 +28,7 @@ namespace StudentManager
             };
 
             var m = new Manager();
+            m.Students.Add(trung);
             m.Classes.Add(c1203l);
             m.TimeSlots.Add(late);
             m.Rooms.Add(lab1);
