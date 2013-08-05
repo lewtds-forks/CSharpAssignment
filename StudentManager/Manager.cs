@@ -123,6 +123,16 @@ namespace StudentManager
         public HashSet<Tuple<Class, Student>> ClassStudents { get; }
         public HashSet<Tuple<Class, Room, TimeSlot>> Allocation { get; }
 
+        public Manager()
+        {
+            Classes = new SortedSet<Class>();
+            Students = new SortedSet<Student>();
+            Rooms = new HashSet<Room>();
+            TimeSlots = new HashSet<TimeSlot>();
+            ClassStudents = new HashSet<Tuple<Class, Student>>();
+            Allocation = new HashSet<Tuple<Class, Room, TimeSlot>>();
+        }
+
         public Student GetStudentById(int id){}
         public Class GetClassById(int id){}
 
