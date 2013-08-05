@@ -9,6 +9,8 @@ namespace StudentManager
         private HashSet<Tuple<Class, Student>> classStudentRels;
         private SortedSet<Class> allClasses;
         private HashSet<Tuple<Class, Room, TimeSlot>> classRoomSlots;
+        private HashSet<Room> availableRooms;
+        private HashSet<TimeSlot> availableTimeSlots;
 
         /// <summary>
         /// Get all class-student relationships.
@@ -41,6 +43,9 @@ namespace StudentManager
         {
             classStudentRels = new HashSet<Tuple<Class, Student>>();
             allClasses = new SortedSet<Class>();
+            availableRooms = new HashSet<Room>();
+            availableTimeSlots = new HashSet<TimeSlot>();
+            classRoomSlots = new HashSet<Tuple<Class, Room, TimeSlot>>();
         }
 
         public bool AddStudentClass(Student s, Class cl)
@@ -90,6 +95,15 @@ namespace StudentManager
             return (from pair in classStudentRels
                     where pair.Item2.ID == id
                     select pair.Item2).FirstOrDefault();
+        }
+
+        public bool RegisterClassRoomSlot(Class cl, Room r, TimeSlot t)
+        {
+            // TODO What about overlapping timeslots?
+            return this.allClasses.Contains(cl) &&
+                this.availableRooms.Contains(r) &&
+                this.availableTimeSlots.Contains(t) &&
+                this.classRoomSlots.Add(new Tuple<Class, Room, TimeSlot>(cl, r, t));
         }
     }
 }
