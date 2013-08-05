@@ -112,5 +112,26 @@ namespace StudentManager
 //                .Remove(new Tuple<Class, Room, TimeSlot>(clss, room, slot));
 //        }
 //    }
+
+    class Manager
+    {
+        public SortedSet<Class> Classes { get; }
+        public SortedSet<Student> Students { get; }
+        public HashSet<Room> Rooms { get; }
+        public HashSet<TimeSlot> TimeSlots { get; }
+
+        public HashSet<Tuple<Class, Student>> ClassStudents { get; }
+        public HashSet<Tuple<Class, Room, TimeSlot>> Allocation { get; }
+
+        public Student GetStudentById(int id){}
+        public Class GetClassById(int id){}
+
+        public bool RegisterStudentWithClass(Student s, Class c) {}
+        public bool RemoveStudentFromClass(Student s, Class c) {}
+        public bool SwitchClassOfStudent(Student s, Class old, Class nw) {}
+
+        public bool RegisterClassRoomTimeSlot(Class cl, Room r, TimeSlot t) {}
+        public bool RemoveClassRoomTimeSlot(Class cl, Room r, TimeSlot t) {}
+    }
 }
 
