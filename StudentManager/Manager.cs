@@ -155,6 +155,10 @@ namespace StudentManager
                     select cl).SingleOrDefault();
         }
 
+        /// <summary>
+        /// Registers a student with an existing class. The class should have
+        /// been added to the Classes property already.
+        /// </summary>
         public bool RegisterStudentWithClass(Student s, Class c)
         {
             return this.Students.Contains(s) &&
@@ -173,6 +177,11 @@ namespace StudentManager
                 RegisterStudentWithClass(s, nw);
         }
 
+        /// <summary>
+        /// Registers a class with a room-timeslot pair. The class, the room and
+        /// the timeslot should have been registered to the Classes, Rooms and
+        /// TimeSlots properties already.
+        /// </summary>
         public bool RegisterClassRoomTimeSlot(Class cl, Room r, TimeSlot t)
         {
             return Classes.Contains(cl) &&
