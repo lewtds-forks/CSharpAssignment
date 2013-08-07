@@ -1,12 +1,30 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="StudentManager/StudentManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="StudentManager/Tests/TestManager.cs">
     <Files>
-      <File FileName="StudentManager/StudentManager.cs" Line="5" Column="25" />
-      <File FileName="StudentManager/Student.cs" Line="7" Column="30" />
-      <File FileName="StudentManager/Class.cs" Line="16" Column="17" />
-      <File FileName="StudentManager/Manager.cs" Line="39" Column="103" />
+      <File FileName="StudentManager/Main.cs" Line="26" Column="17" />
+      <File FileName="StudentManager/Manager.cs" Line="90" Column="31" />
+      <File FileName="StudentManager/Class.cs" Line="35" Column="6" />
+      <File FileName="StudentManager/Tests/TestManager.cs" Line="19" Column="10" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="StudentManager" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="Tests" expanded="True">
+              <Node name="TestManager.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
