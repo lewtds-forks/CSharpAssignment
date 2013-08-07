@@ -60,6 +60,7 @@ namespace StudentManager
 
         public bool RemoveStudentFromClass(Student s, Class c)
         {
+            // TODO This won't remove the student from Students
             return this.classStudents.Remove(new Tuple<Class, Student>(c, s));
         }
 
