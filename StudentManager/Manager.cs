@@ -6,6 +6,8 @@ namespace StudentManager
 {
     class Manager
     {
+        // Mutable collections, expected to be edited by
+        // users.
         public SortedSet<Class> Classes { get; private set; }
 
         public SortedSet<Student> Students { get; private set; }
@@ -17,6 +19,9 @@ namespace StudentManager
         private HashSet<Tuple<Class, Student>> classStudents;
         private HashSet<Tuple<Class, Room, TimeSlot>> allocation;
 
+        // Immutable through IEnumerable.
+        // This level of encapsulation is enough for such a small
+        // project.
         public IEnumerable<Tuple<Class, Student>> ClassStudents
         { get { return this.classStudents; } }
 

@@ -7,31 +7,6 @@ using NUnit.Framework;
 namespace StudentManager.Tests
 {
     [TestFixture]
-    class TestImmutability
-    {
-        private Manager m;
-
-        [SetUp]
-        public void Init() {
-            m = new Manager();
-        }
-
-        [Test]
-        public void TestClasses()
-        {
-            m.Classes.Add(new Class());
-            Assert.AreEqual(0, m.Classes.Count());
-        }
-
-        [Test]
-        public void TestStudents()
-        {
-            m.Students.Add(new Student());
-            Assert.AreEqual(0, m.Students.Count());
-        }
-    }
-
-    [TestFixture]
     class TestStudentManagement
     {
         private Manager m;
