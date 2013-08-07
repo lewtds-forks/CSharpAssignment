@@ -14,6 +14,7 @@ namespace StudentManager
 
         public HashSet<Room> Rooms { get; private set; }
 
+        // TODO Prevent overlapping timeslots
         public HashSet<TimeSlot> TimeSlots { get; private set; }
 
         private HashSet<Tuple<Class, Student>> classStudents;
@@ -86,6 +87,9 @@ namespace StudentManager
             return Classes.Contains(cl) &&
                 Rooms.Contains(r) &&
                 TimeSlots.Contains(t) &&
+                (from roomSlot in this.allocation
+                 where roomSlot.Item2.Equals(r) && roomSlot.Item3.Equals(t)
+                 select roomSlot).Count() == 0 &&
                 this.allocation.Add(new Tuple<Class, Room, TimeSlot>(cl, r, t));
         }
 

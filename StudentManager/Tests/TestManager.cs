@@ -97,6 +97,7 @@ namespace StudentManager.Tests
         public void Init() {
             m = new Manager();
             m.Classes.Add(c1203l);
+            m.Classes.Add(bogus);
             m.Rooms.Add(lab1);
             m.TimeSlots.Add(evening);
         }
@@ -109,6 +110,7 @@ namespace StudentManager.Tests
         [Test]
         public void RegisterSameSlot()
         {
+            m.RegisterClassRoomTimeSlot(c1203l, lab1, evening);
             Assert.False(m.RegisterClassRoomTimeSlot(bogus, lab1, evening));
         }
 
