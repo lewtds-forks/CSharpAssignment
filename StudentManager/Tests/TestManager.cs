@@ -7,7 +7,32 @@ using NUnit.Framework;
 namespace StudentManager.Tests
 {
     [TestFixture]
-    class TestLogic
+    class TestImmutability
+    {
+        private Manager m;
+
+        [SetUp]
+        public void Init() {
+            m = new Manager();
+        }
+
+        [Test]
+        public void TestClasses()
+        {
+            m.Classes.Add(new Class());
+            Assert.AreEqual(0, m.Classes.Count());
+        }
+
+        [Test]
+        public void TestStudents()
+        {
+            m.Students.Add(new Student());
+            Assert.AreEqual(0, m.Students.Count());
+        }
+    }
+
+    [TestFixture]
+    class TestStudentManagement
     {
         private Manager m;
         private Student trung = new Student()
@@ -51,9 +76,72 @@ namespace StudentManager.Tests
         }
 
         [Test]
-        public void TestRemoveStudent() {
+        public void TestChangeClassOfStudent() {
+            var bogusClass = new Class() 
+            { 
+                ID = 40,
+                Name = "Bogus"
+            };
             m.Classes.Add(c1203l);
+            m.Classes.Add(bogusClass);
             m.Students.Add(trung);
+            m.RegisterStudentWithClass(trung, c1203l);
+            m.SwitchClassOfStudent(trung, c1203l, bogusClass);
+
+            var tuple = m.ClassStudents.SingleOrDefault();
+            Assert.AreSame(tuple.Item1, bogusClass);
+            Assert.AreSame(tuple.Item2, trung);
+        }
+    }
+
+    [TestFixture]
+    class TestClassAllocation
+    {
+        private Manager m;
+        private Class c1203l = new Class()
+        {
+            ID = 3,
+            Name = "C1203L"
+        };
+        private Class bogus = new Class()
+        {
+            ID = 4,
+            Name = "Bogus"
+        };
+
+        private Room lab1 = new Room() {
+            Name = "Lab 1"
+        };
+
+        private TimeSlot evening = new TimeSlot() {
+            StartTime = DateTime.MinValue.AddDays(4).AddHours(17).AddMinutes(30),
+            EndTime = DateTime.MinValue.AddDays(4).AddHours(19).AddMinutes(30)
+        };
+
+        [SetUp]
+        public void Init() {
+            m = new Manager();
+            m.Classes.Add(c1203l);
+            m.Rooms.Add(lab1);
+            m.TimeSlots.Add(evening);
+        }
+
+        [Test]
+        public void RegisterGoodTimeSlot() {
+            Assert.True(m.RegisterClassRoomTimeSlot(c1203l, lab1, evening));
+        }
+
+        [Test]
+        public void RegisterSameSlot()
+        {
+            Assert.False(m.RegisterClassRoomTimeSlot(bogus, lab1, evening));
+        }
+
+        [Test]
+        public void RemoveClassSlot() {
+            m.RegisterClassRoomTimeSlot(c1203l, lab1, evening);
+            Assert.True(m.RemoveClassRoomTimeSlot(c1203l, lab1, evening));
+            Assert.Null(m.Allocation.SingleOrDefault());
         }
     }
 }
