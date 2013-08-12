@@ -22,11 +22,8 @@ namespace StudentManager.Tests
                 ID = 5
             };
 
-            var c = new Student() { ID = 10 };
-
             Assert.That(a.CompareTo(b) > 0);
             Assert.False(a.Equals(b));
-            Assert.True(a.Equals(c));
         }
 
         [Test]
@@ -42,11 +39,8 @@ namespace StudentManager.Tests
                 ID = 5
             };
 
-            var c = new Class() { ID = 10 };
-
             Assert.That(a.CompareTo(b) > 0);
             Assert.False(a.Equals(b));
-            Assert.True(a.Equals(c));
         }
     }
 }
