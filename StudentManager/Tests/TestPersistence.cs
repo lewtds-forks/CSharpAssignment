@@ -76,6 +76,19 @@ namespace StudentManager
             var a = xml.load<Student>("student.xml");
             Assert.AreEqual(s, a);
         }
+        
+        [Test]
+        public void LoadCollection()
+        {
+            var expected = new SortedSet<Class>();
+            expected.Add(new Class() {
+                ID = 1,
+                Name = "C1203L",
+                Teacher = "NhatNK"
+            });
+            xml.save<List<Class>>("classes.xml", expected.ToList());
+            var got = new SortedSet<Class>(xml.load<List<Class>>("classes.xml"));
+            Assert.AreEqual(expected, got);
+        }
     }
 }
-
