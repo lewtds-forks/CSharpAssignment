@@ -32,6 +32,18 @@ namespace StudentManager
         {
             return this.ID - other.ID;
         }
+        
+        public override bool Equals(Object other)
+        {
+            if (other == null)
+                return false;
+            
+            Identity _other = other as Identity;
+            if (_other == null)
+                return false;
+            
+            return this.ID == _other.ID;
+        }
     }
 }
 
