@@ -64,7 +64,7 @@ namespace StudentManager
         }
         
         [Test]
-        public void Load() {
+        public void LoadIdentity() {
             var s = new Student()
             {
                 ID = 10,
