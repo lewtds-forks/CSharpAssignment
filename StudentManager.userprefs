@@ -1,19 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="StudentManager/Tests/TestManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="StudentManager/Tests/TestPersistence.cs">
     <Files>
-      <File FileName="StudentManager/Main.cs" Line="26" Column="17" />
-      <File FileName="StudentManager/Manager.cs" Line="90" Column="31" />
-      <File FileName="StudentManager/Class.cs" Line="35" Column="6" />
-      <File FileName="StudentManager/Tests/TestManager.cs" Line="19" Column="10" />
+      <File FileName="StudentManager/Main.cs" Line="10" Column="10" />
+      <File FileName="StudentManager/Identity.cs" Line="31" Column="26" />
+      <File FileName="StudentManager/Tests/TestManager.cs" Line="116" Column="1" />
+      <File FileName="StudentManager/Tests/TestPersistence.cs" Line="95" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="StudentManager" expanded="True">
-            <Node name="References" expanded="True" />
             <Node name="Tests" expanded="True">
-              <Node name="TestManager.cs" selected="True" />
+              <Node name="TestPersistence.cs" selected="True" />
             </Node>
           </Node>
         </State>
@@ -23,6 +22,17 @@
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State />
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True">
+          <Node name="StudentManager" expanded="True">
+            <Node name="StudentManager" expanded="True">
+              <Node name="TestPersistence" expanded="True">
+                <Node name="SaveSortedSet" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
