@@ -30,9 +30,19 @@ namespace StudentManager
         public void save<T>(String path, T data)
         {
             var serializer = new XmlSerializer(typeof(T));
-            TextWriter textWriter = new StreamWriter(path);
-            serializer.Serialize(textWriter, data);
-            textWriter.Close();
+            using (var textWriter = new StreamWriter(path)) {
+                serializer.Serialize(textWriter, data);
+            }
+        }
+        
+        public T load<T>(String path)
+        {
+            T data;
+            var serializer = new XmlSerializer(typeof(T));
+            using (var textReader = new StreamReader(path)) {
+                 data = (T) serializer.Deserialize(textReader);
+            }
+            return data;
         }
     }
 }
