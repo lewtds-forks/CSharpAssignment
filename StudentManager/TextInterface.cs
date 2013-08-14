@@ -29,6 +29,7 @@ namespace StudentManager.TextUi
     {
         protected OrderedDictionary commands;
         protected bool running = false;
+        protected bool ClearScreen = false;
         protected event Action PreHook;
         protected event Action PostHook;
 
@@ -62,6 +63,8 @@ namespace StudentManager.TextUi
                 String choice = System.Console.ReadLine();
                 if (commands.Contains(choice))
                 {
+                    if (this.ClearScreen)
+                        System.Console.Clear();
                     (commands[choice] as Tuple<String, Action>).Item2.Invoke();
                     if (PostHook != null)
                         PostHook();
