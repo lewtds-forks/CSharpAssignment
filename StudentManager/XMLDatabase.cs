@@ -25,21 +25,27 @@ using System.Xml.Serialization;
 
 namespace StudentManager
 {
-    public class XMLDatabase
+    public interface IPersistenceService
     {
-        public void save<T>(String path, T data)
+        void save<T>(String uri, T data);
+        T load<T>(String uri);
+    }
+
+    public class XMLDatabase : IPersistenceService
+    {
+        public void save<T>(String uri, T data)
         {
             var serializer = new XmlSerializer(typeof(T));
-            using (var textWriter = new StreamWriter(path)) {
+            using (var textWriter = new StreamWriter(uri)) {
                 serializer.Serialize(textWriter, data);
             }
         }
         
-        public T load<T>(String path)
+        public T load<T>(String uri)
         {
             T data;
             var serializer = new XmlSerializer(typeof(T));
-            using (var textReader = new StreamReader(path)) {
+            using (var textReader = new StreamReader(uri)) {
                  data = (T) serializer.Deserialize(textReader);
             }
             return data;
