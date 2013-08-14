@@ -27,8 +27,9 @@ namespace StudentManager.TextUi
 {
     abstract class ChoiceScreen
     {
-        protected OrderedDictionary commands;
-        protected bool running = false;
+        private OrderedDictionary commands;
+        private bool running = false;
+
         protected bool ClearScreen = false;
         protected event Action PreHook;
         protected event Action PostHook;
@@ -43,7 +44,7 @@ namespace StudentManager.TextUi
             commands.Add(key, new Tuple<String, Action>(label, action));
         }
         
-        public void Start()
+        public virtual void Start()
         {
             this.running = true;
             while (this.running)
@@ -59,6 +60,9 @@ namespace StudentManager.TextUi
                 }
                 
                 String choice = System.Console.ReadLine();
+                // FIXME This implementation does not allow key aliases
+                //       i.e. using both "b"(ack) and "q"(uit) for the
+                //       quit action on the main screen.
                 if (commands.Contains(choice))
                 {
                     if (this.ClearScreen)
@@ -88,13 +92,18 @@ namespace StudentManager.TextUi
             this.manager = manager;
 
             AddChoice("1", "Manage classes", ManageClasses);
-
+            AddChoice("2", "Manage timetable", ManageTimetable);
             AddChoice("q", "Quit", Stop);
         }
 
         public void ManageClasses()
         {
             new ClassScreen(this.manager).Start();
+        }
+
+        public void ManageTimetable()
+        {
+
         }
 
         public override void Stop()
@@ -111,8 +120,8 @@ namespace StudentManager.TextUi
         {
             this.manager = manager;
 
-            AddChoice("1", "List classes", ListClasses);
-            AddChoice("2", "Manage timetable", ManageTimetable);
+            AddChoice("1", "Add a class", AddClass);
+            AddChoice("2", "Select a class to edit", SelectClass);
             AddChoice("b", "Back", Stop);
         }
 
@@ -122,19 +131,20 @@ namespace StudentManager.TextUi
             {
                 Console.WriteLine(String.Format("{0} {1} {2}", cl.ID, cl.Name, cl.Teacher));
             }
-
-            Class c = null;
-            do
-            {
-                Console.Write("Please select a class ID: ");
-                String id = System.Console.ReadLine();
-                c = manager.GetClassById(id);
-            } while (c == null);
         }
 
-        public void ManageTimetable()
+        public void AddClass()
         {
+        }
 
+        public void SelectClass()
+        {
+        }
+
+        public override void Start()
+        {
+            ListClasses();
+            base.Start();
         }
     }
 }
