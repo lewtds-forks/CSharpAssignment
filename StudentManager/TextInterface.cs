@@ -33,8 +33,6 @@ namespace StudentManager.TextUi
         protected event Action PreHook;
         protected event Action PostHook;
 
-        public String Message { get; set; }
-        
         public ChoiceScreen()
         {
             commands = new OrderedDictionary();
