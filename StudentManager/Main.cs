@@ -9,7 +9,8 @@ namespace StudentManager
     {
         public static void Main(string[] args)
         {
-            new MainScreen().Start();
+            Manager m = new Manager();
+            new MainScreen(m).Start();
         }
     }
 }
