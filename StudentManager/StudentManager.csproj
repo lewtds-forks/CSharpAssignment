@@ -53,6 +53,7 @@
     <Compile Include="Tests\TestPersistence.cs" />
     <Compile Include="XMLDatabase.cs" />
     <Compile Include="Identity.cs" />
+    <Compile Include="TextInterface.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
