@@ -30,9 +30,9 @@ namespace StudentManager.TextUi
         private OrderedDictionary commands;
         private bool running = false;
 
-        protected bool ClearScreen = false;
-        protected event Action PreHook;
-        protected event Action PostHook;
+        protected event Action PreMenuHook;
+        protected event Action PreActionHook;
+        protected event Action PostActionHook;
 
         public ChoiceScreen()
         {
@@ -49,8 +49,8 @@ namespace StudentManager.TextUi
             this.running = true;
             while (this.running)
             {
-                if (PreHook != null)
-                    PreHook();
+                if (PreMenuHook != null)
+                    PreMenuHook();
                 foreach (DictionaryEntry de in commands)
                 {
                     Console.WriteLine(
@@ -65,11 +65,13 @@ namespace StudentManager.TextUi
                 //       quit action on the main screen.
                 if (commands.Contains(choice))
                 {
-                    if (this.ClearScreen)
-                        System.Console.Clear();
+                    if (PreActionHook != null)
+                        PreActionHook();
+
                     (commands[choice] as Tuple<String, Action>).Item2.Invoke();
-                    if (PostHook != null)
-                        PostHook();
+
+                    if (PostActionHook != null)
+                        PostActionHook();
                 } else
                 {
                     Console.WriteLine("No such choice!");
