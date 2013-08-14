@@ -29,6 +29,8 @@ namespace StudentManager.TextUi
     {
         protected OrderedDictionary commands;
         protected bool running = false;
+        protected event Action PreHook;
+        protected event Action PostHook;
 
         public String Message { get; set; }
         
@@ -47,6 +49,8 @@ namespace StudentManager.TextUi
             this.running = true;
             while (this.running)
             {
+                if (PreHook != null)
+                    PreHook();
                 foreach (DictionaryEntry de in commands)
                 {
                     Console.WriteLine(
@@ -59,6 +63,8 @@ namespace StudentManager.TextUi
                 if (commands.Contains(choice))
                 {
                     (commands[choice] as Tuple<String, Action>).Item2.Invoke();
+                    if (PostHook != null)
+                        PostHook();
                 } else
                 {
                     Console.WriteLine("No such choice!");
