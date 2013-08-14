@@ -29,6 +29,10 @@ namespace StudentManager
         public IEnumerable<Tuple<Class, Room, TimeSlot>> Allocation
         { get { return this.allocation; } }
 
+        /// <summary>
+        /// In memory constructor. All data is created fresh. Mostly for testing
+        /// purposes.
+        /// </summary>
         public Manager()
         {
             Classes = new HashSet<Class>();
@@ -37,6 +41,22 @@ namespace StudentManager
             TimeSlots = new HashSet<TimeSlot>();
             classStudents = new HashSet<Tuple<Class, Student>>();
             allocation = new HashSet<Tuple<Class, Room, TimeSlot>>();
+        }
+
+        /// <summary>
+        /// Initializes with external data sources.
+        /// </summary>
+        /// <param name='database'>
+        /// A database accessing object.
+        /// </param>
+        /// <param name='UriMapping'>
+        /// A mapping between resources' name and their URI. The list of resources that
+        /// we need is: classes, students, rooms, timeslots, classstudents, allocation.
+        /// </param>
+        public Manager(IPersistenceService database, Dictionary<String, String> UriMapping)
+        {
+            Classes = new HashSet<Class>(database.load<List<Class>>(UriMapping["classes"]));
+            Students = new SortedSet<Student>(database.load<List<Student>>(UriMapping["students"]));
         }
 
         public Student GetStudentById(int id)
