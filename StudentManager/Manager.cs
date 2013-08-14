@@ -8,7 +8,7 @@ namespace StudentManager
     {
         // Mutable collections, expected to be edited by
         // users.
-        public SortedSet<Class> Classes { get; private set; }
+        public HashSet<Class> Classes { get; private set; }
 
         public SortedSet<Student> Students { get; private set; }
 
@@ -31,7 +31,7 @@ namespace StudentManager
 
         public Manager()
         {
-            Classes = new SortedSet<Class>();
+            Classes = new HashSet<Class>();
             Students = new SortedSet<Student>();
             Rooms = new HashSet<Room>();
             TimeSlots = new HashSet<TimeSlot>();
@@ -46,10 +46,17 @@ namespace StudentManager
                     select student).SingleOrDefault();
         }
 
-        public Class GetClassById(int id)
+//        public Class GetClassById(int id)
+//        {
+//            return (from cl in this.Classes
+//                    where cl.ID == id
+//                    select cl).SingleOrDefault();
+//        }
+
+        public Class GetClassByName(String name)
         {
             return (from cl in this.Classes
-                    where cl.ID == id
+                    where cl.Name == name
                     select cl).SingleOrDefault();
         }
 

@@ -15,7 +15,7 @@ namespace StudentManager
         public DateTime EndTime { get; set; }
     }
 
-    public class Class: Identity
+    public class Class
     {
         public string Name { get; set; }
 

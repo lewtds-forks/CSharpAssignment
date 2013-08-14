@@ -17,7 +17,6 @@ namespace StudentManager.Tests
         };
         private Class c1203l = new Class()
         {
-            ID = 3,
             Name = "C1203L",
             Teacher = "NhatNK"
         };
@@ -53,8 +52,7 @@ namespace StudentManager.Tests
         [Test]
         public void TestChangeClassOfStudent() {
             var bogusClass = new Class() 
-            { 
-                ID = 40,
+            {
                 Name = "Bogus"
             };
             m.Classes.Add(c1203l);
@@ -75,12 +73,10 @@ namespace StudentManager.Tests
         private Manager m;
         private Class c1203l = new Class()
         {
-            ID = 3,
             Name = "C1203L"
         };
         private Class bogus = new Class()
         {
-            ID = 4,
             Name = "Bogus"
         };
 

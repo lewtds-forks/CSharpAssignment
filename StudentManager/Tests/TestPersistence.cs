@@ -56,7 +56,6 @@ namespace StudentManager
         {
             var s = new SortedSet<Class>();
             s.Add(new Class() {
-                ID = 1,
                 Name = "C1203L",
                 Teacher = "NhatNK"
             });
@@ -82,7 +81,6 @@ namespace StudentManager
         {
             var expected = new SortedSet<Class>();
             expected.Add(new Class() {
-                ID = 1,
                 Name = "C1203L",
                 Teacher = "NhatNK"
             });
