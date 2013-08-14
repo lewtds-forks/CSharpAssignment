@@ -20,6 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 using System;
+using System.Linq;
 using System.Collections.Specialized;
 using System.Collections;
 
@@ -34,8 +35,11 @@ namespace StudentManager.TextUi
         protected event Action PreActionHook;
         protected event Action PostActionHook;
 
-        public ChoiceScreen()
+        protected ChoiceScreen Parent;
+
+        public ChoiceScreen(ChoiceScreen parent)
         {
+            this.Parent = parent;
             commands = new OrderedDictionary();
         }
         
@@ -78,10 +82,23 @@ namespace StudentManager.TextUi
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Stop this instance and return to parent screen.
+        /// </summary>
         public virtual void Stop()
         {
             this.running = false;
+        }
+
+        /// <summary>
+        /// Stop this instance and chain all parents' Quit method.
+        /// </summary>
+        public void Quit()
+        {
+            this.Stop();
+            if (Parent != null)
+                Parent.Quit();
         }
     }
 
@@ -89,18 +106,18 @@ namespace StudentManager.TextUi
     {
         Manager manager;
 
-        public MainScreen(Manager manager)
+        public MainScreen(Manager manager): base(null)
         {
             this.manager = manager;
 
             AddChoice("1", "Manage classes", ManageClasses);
             AddChoice("2", "Manage timetable", ManageTimetable);
-            AddChoice("q", "Quit", Stop);
+            AddChoice("q", "Quit", Quit);
         }
 
         public void ManageClasses()
         {
-            new ClassScreen(this.manager).Start();
+            new ClassScreen(this.manager, this).Start();
         }
 
         public void ManageTimetable()
@@ -118,35 +135,88 @@ namespace StudentManager.TextUi
     {
         Manager manager;
 
-        public ClassScreen(Manager manager)
+        public ClassScreen(Manager manager, ChoiceScreen parent):
+            base(parent)
         {
             this.manager = manager;
 
             AddChoice("1", "Add a class", AddClass);
             AddChoice("2", "Select a class to edit", SelectClass);
             AddChoice("b", "Back", Stop);
-        }
+            AddChoice("q", "Quit", Quit);
 
-        public void ListClasses()
-        {
-            foreach (var cl in manager.Classes)
-            {
-                Console.WriteLine(String.Format("{0} {1} {2}", cl.ID, cl.Name, cl.Teacher));
-            }
+            this.PreMenuHook += () => {
+                foreach (var cl in manager.Classes)
+                {
+                    Console.WriteLine(String.Format("{0} {1}", cl.Name, cl.Teacher));
+                }
+            };
         }
 
         public void AddClass()
         {
+            Console.Write("Class name: ");
+            String name = Console.ReadLine();
+
+            Console.Write("Teacher: ");
+            String teacher = Console.ReadLine();
+
+            var c = new Class()
+            {
+                Name = name,
+                Teacher = teacher
+            };
+
+            manager.Classes.Add(c);
+        }
+
+        class EachClassScreen : ChoiceScreen
+        {
+            Class c;
+            ClassScreen parent;
+
+            public EachClassScreen(Class c, ClassScreen parent):
+                base(parent)
+            {
+                this.c = c;
+                this.parent = parent;
+
+                AddChoice("1", "Select student ID", SelectStudent);
+                AddChoice("2", "Remove class", RemoveClass);
+                AddChoice("3", "Change class info", ChangeClassInfo);
+                AddChoice("b", "Back", Stop);
+                AddChoice("q", "Quit", Quit);
+
+                this.PreMenuHook += () => {
+                    var studentList =
+                        (from tuple in this.parent.manager.ClassStudents
+                         where tuple.Item1.Equals(this.c)
+                         select tuple.Item2);
+
+                    foreach (Student student in studentList)
+                    {
+                        Console.WriteLine(String.Format("{0} {1}", student.ID, student.Name));
+                    }
+                };
+            }
+
+            void SelectStudent()
+            {
+            }
+
+            void RemoveClass()
+            {
+            }
+
+            void ChangeClassInfo() {}
         }
 
         public void SelectClass()
         {
-        }
-
-        public override void Start()
-        {
-            ListClasses();
-            base.Start();
+            Console.Write("Select a class ID: ");
+            String name = Console.ReadLine();
+            Class c = manager.GetClassByName(name);
+            new EachClassScreen(c, this).Start();
         }
     }
 }
