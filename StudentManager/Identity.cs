@@ -25,6 +25,17 @@ using System.Reflection;
 
 namespace StudentManager
 {
+    /// <summary>
+    /// Base class for identities.
+    /// </summary>
+    /// <remarks>
+    /// The single purpose for this class' existence is to provide
+    /// simple and uniform ID and equality check. Inheriting classes
+    /// are expected to have a single public property decorated with
+    /// the [ID] attribute, which will be used in equality comparisions.
+    /// If there are multiple properties with ID attribute, only the
+    /// first one will be used.
+    /// </remarks>
     public abstract class Identity : IEquatable<Identity>
     {
         [AttributeUsage(System.AttributeTargets.Property)]
