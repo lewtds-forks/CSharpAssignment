@@ -3,8 +3,9 @@ using System.Collections.Generic;
 
 namespace StudentManager
 {
-    public struct Room
+    public class Room : Identity
     {
+        [Identity.ID]
         public String Name { get; set; }
     }
 
@@ -15,8 +16,9 @@ namespace StudentManager
         public DateTime EndTime { get; set; }
     }
 
-    public class Class
+    public class Class : Identity
     {
+        [Identity.ID]
         public string Name { get; set; }
 
         public string Teacher { get; set; }

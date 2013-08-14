@@ -12,7 +12,7 @@ namespace StudentManager.Tests
         private Manager m;
         private Student trung = new Student()
         {
-            ID = 10,
+            ID = "B01414",
             Name = "Trung"
         };
         private Class c1203l = new Class()
@@ -28,11 +28,11 @@ namespace StudentManager.Tests
 
         [Test]
         public void TestGetStudentByID() {
-            Assert.Null(m.GetStudentById(10));
+            Assert.Null(m.GetStudentById("B01415"));
 
             m.Students.Add(trung);
-            Assert.AreSame(trung, m.GetStudentById(10));
-            Assert.Null(m.GetStudentById(80));
+            Assert.AreSame(trung, m.GetStudentById("B01414"));
+            Assert.Null(m.GetStudentById(""));
         }
 
         [Test]

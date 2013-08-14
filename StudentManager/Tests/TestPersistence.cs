@@ -34,7 +34,7 @@ namespace StudentManager
         {
             var s = new Student()
             {
-                ID = 10,
+                ID = "B01414",
                 Name = "Trung",
                 Address = "Home"
             };
@@ -66,7 +66,7 @@ namespace StudentManager
         public void LoadIdentity() {
             var s = new Student()
             {
-                ID = 10,
+                ID = "B01414",
                 Name = "Trung",
                 Address = "Home"
             };

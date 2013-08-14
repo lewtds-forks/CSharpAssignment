@@ -10,7 +10,7 @@ namespace StudentManager
         // users.
         public HashSet<Class> Classes { get; private set; }
 
-        public SortedSet<Student> Students { get; private set; }
+        public HashSet<Student> Students { get; private set; }
 
         public HashSet<Room> Rooms { get; private set; }
 
@@ -36,7 +36,7 @@ namespace StudentManager
         public Manager()
         {
             Classes = new HashSet<Class>();
-            Students = new SortedSet<Student>();
+            Students = new HashSet<Student>();
             Rooms = new HashSet<Room>();
             TimeSlots = new HashSet<TimeSlot>();
             classStudents = new HashSet<Tuple<Class, Student>>();
@@ -56,10 +56,10 @@ namespace StudentManager
         public Manager(IPersistenceService database, Dictionary<String, String> UriMapping)
         {
             Classes = new HashSet<Class>(database.load<List<Class>>(UriMapping["classes"]));
-            Students = new SortedSet<Student>(database.load<List<Student>>(UriMapping["students"]));
+            Students = new HashSet<Student>(database.load<List<Student>>(UriMapping["students"]));
         }
 
-        public Student GetStudentById(int id)
+        public Student GetStudentById(String id)
         {
             return (from student in this.Students
                     where student.ID == id

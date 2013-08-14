@@ -14,15 +14,14 @@ namespace StudentManager.Tests
         {
             var a = new Student()
             {
-                ID = 10
+                ID = "aoe"
             };
 
             var b = new Student()
             {
-                ID = 5
+                ID = "aoed"
             };
 
-            Assert.That(a.CompareTo(b) > 0);
             Assert.False(a.Equals(b));
         }
 
