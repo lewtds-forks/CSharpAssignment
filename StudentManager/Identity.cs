@@ -20,30 +20,64 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace StudentManager
 {
-    public abstract class Identity: IComparable<Identity>
+    public abstract class Identity : IEquatable<Identity>
     {
-        public int ID { get; set; }
-        
-        
-        public int CompareTo(Identity other)
+        [AttributeUsage(System.AttributeTargets.Property)]
+        public class IDAttribute : System.Attribute
         {
-            return this.ID - other.ID;
         }
-        
-        public override bool Equals(Object other)
+
+        MethodInfo IdGetMethod;
+
+        public Identity()
         {
-            if (other == null)
-                return false;
-            
-            Identity _other = other as Identity;
-            if (_other == null)
-                return false;
-            
-            return this.ID == _other.ID;
+            var idProperty = (from prop in this.GetType().GetProperties()
+                     from attr in prop.GetCustomAttributes(false)
+                     where attr is IDAttribute
+                     select prop).SingleOrDefault();
+
+            // Not null, readable and not an indexer
+            if (idProperty != null &&
+                idProperty.CanRead &&
+                idProperty.GetIndexParameters().Length == 0)
+            {
+                IdGetMethod = idProperty.GetGetMethod();
+            }
         }
+
+        #region IEquatable[Identity] implementation
+        public bool Equals(Identity other)
+        {
+            if (this.IdGetMethod != null)
+            {
+                object otherId = other.IdGetMethod.Invoke(other, null);
+                object thisId = this.IdGetMethod.Invoke(this, null);
+                return thisId.Equals(otherId);
+            } else
+            {
+                return base.Equals(other);
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as Identity;
+            return other != null && this.Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            if (this.IdGetMethod != null)
+                return this.IdGetMethod.Invoke(this, null).GetHashCode();
+            else
+                return base.GetHashCode();
+        }
+        #endregion
     }
 }
 
