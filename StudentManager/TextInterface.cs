@@ -66,7 +66,7 @@ namespace StudentManager.TextUi
             }
         }
         
-        public void Stop()
+        public virtual void Stop()
         {
             this.running = false;
         }
@@ -74,15 +74,60 @@ namespace StudentManager.TextUi
 
     class MainScreen : ChoiceScreen
     {
-        public MainScreen()
+        Manager manager;
+
+        public MainScreen(Manager manager)
         {
-            AddChoice("1", "Create new class", CreateNewClass);
+            this.manager = manager;
+
+            AddChoice("1", "Manage classes", ManageClasses);
 
             AddChoice("q", "Quit", Stop);
         }
-        
-        public void CreateNewClass()
+
+        public void ManageClasses()
         {
+            new ClassScreen(this.manager).Start();
+        }
+
+        public override void Stop()
+        {
+            base.Stop();
+        }
+    }
+
+    class ClassScreen : ChoiceScreen
+    {
+        Manager manager;
+
+        public ClassScreen(Manager manager)
+        {
+            this.manager = manager;
+
+            AddChoice("1", "List classes", ListClasses);
+            AddChoice("2", "Manage timetable", ManageTimetable);
+            AddChoice("b", "Back", Stop);
+        }
+
+        public void ListClasses()
+        {
+            foreach (var cl in manager.Classes)
+            {
+                Console.WriteLine(String.Format("{0} {1} {2}", cl.ID, cl.Name, cl.Teacher));
+            }
+
+            Class c = null;
+            do
+            {
+                Console.Write("Please select a class ID: ");
+                String id = System.Console.ReadLine();
+                c = manager.GetClassById(id);
+            } while (c == null);
+        }
+
+        public void ManageTimetable()
+        {
+
         }
     }
 }
