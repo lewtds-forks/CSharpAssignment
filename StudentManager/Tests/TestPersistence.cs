@@ -52,14 +52,14 @@ namespace StudentManager
         }
 
         [Test]
-        public void SaveSortedSet()
+        public void SaveHashSet()
         {
-            var s = new SortedSet<Class>();
+            var s = new HashSet<Class>();
             s.Add(new Class() {
                 Name = "C1203L",
                 Teacher = "NhatNK"
             });
-            xml.save<List<Class>>("classes.xml", s.ToList());
+            xml.save<HashSet<Class>>("classes.xml", s);
         }
         
         [Test]
@@ -77,15 +77,15 @@ namespace StudentManager
         }
         
         [Test]
-        public void LoadCollection()
+        public void LoadHashSet()
         {
-            var expected = new SortedSet<Class>();
+            var expected = new HashSet<Class>();
             expected.Add(new Class() {
                 Name = "C1203L",
                 Teacher = "NhatNK"
             });
-            xml.save<List<Class>>("classes.xml", expected.ToList());
-            var got = new SortedSet<Class>(xml.load<List<Class>>("classes.xml"));
+            xml.save<HashSet<Class>>("classes.xml", expected);
+            var got = xml.load<HashSet<Class>>("classes.xml");
             Assert.AreEqual(expected, got);
         }
     }
