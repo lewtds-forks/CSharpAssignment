@@ -112,7 +112,7 @@ namespace StudentManager.TextUi
 
             AddChoice("1", "Manage classes", ManageClasses);
             AddChoice("2", "Manage timetable", ManageTimetable);
-            AddChoice("q", "Quit", Quit);
+            AddChoice("Q", "Quit", Quit);
         }
 
         public void ManageClasses()
@@ -127,6 +127,7 @@ namespace StudentManager.TextUi
 
         public override void Stop()
         {
+            manager.Save();
             base.Stop();
         }
     }
@@ -142,8 +143,8 @@ namespace StudentManager.TextUi
 
             AddChoice("1", "Add a class", AddClass);
             AddChoice("2", "Select a class to edit", SelectClass);
-            AddChoice("b", "Back", Stop);
-            AddChoice("q", "Quit", Quit);
+            AddChoice("B", "Back", Stop);
+            AddChoice("Q", "Quit", Quit);
 
             this.PreMenuHook += () => {
                 foreach (var cl in manager.Classes)
@@ -170,6 +171,14 @@ namespace StudentManager.TextUi
             manager.Classes.Add(c);
         }
 
+        public void SelectClass()
+        {
+            Console.Write("Select a class ID: ");
+            String name = Console.ReadLine();
+            Class c = manager.GetClassByName(name);
+            new EachClassScreen(c, this).Start();
+        }
+
         class EachClassScreen : ChoiceScreen
         {
             Class c;
@@ -182,10 +191,11 @@ namespace StudentManager.TextUi
                 this.parent = parent;
 
                 AddChoice("1", "Select student ID", SelectStudent);
-                AddChoice("2", "Remove class", RemoveClass);
-                AddChoice("3", "Change class info", ChangeClassInfo);
-                AddChoice("b", "Back", Stop);
-                AddChoice("q", "Quit", Quit);
+                AddChoice("2", "Add student", AddStudent);
+                AddChoice("3", "Remove class", RemoveClass);
+                AddChoice("4", "Change class info", ChangeClassInfo);
+                AddChoice("B", "Back", Stop);
+                AddChoice("Q", "Quit", Quit);
 
                 this.PreMenuHook += () => {
                     var studentList =
@@ -200,8 +210,31 @@ namespace StudentManager.TextUi
                 };
             }
 
+            void AddStudent()
+            {
+                Console.Write("Name: ");
+                String name = Console.ReadLine();
+                Console.Write("Student ID: ");
+                String id = Console.ReadLine();
+                Console.Write("Address (optional): ");
+                String addr = Console.ReadLine();
+
+                Student s = new Student() {
+                    ID = id,
+                    Name = name,
+                    Address = addr
+                };
+
+                parent.manager.Students.Add(s);
+                parent.manager.RegisterStudentWithClass(s, c);
+            }
+
             void SelectStudent()
             {
+                Console.Write("Select a student ID: ");
+                String id = Console.ReadLine();
+                Student s = parent.manager.GetStudentById(id);
+                new StudentScreen(s, parent.manager).Start();
             }
 
             void RemoveClass()
@@ -210,14 +243,11 @@ namespace StudentManager.TextUi
 
             void ChangeClassInfo() {}
         }
+    }
 
-        public void SelectClass()
-        {
-            Console.Write("Select a class ID: ");
-            String name = Console.ReadLine();
-            Class c = manager.GetClassByName(name);
-            new EachClassScreen(c, this).Start();
-        }
+    class EachStudentScreen : ChoiceScreen
+    {
+
     }
 }
 
