@@ -4,6 +4,19 @@ using System.Linq;
 
 namespace StudentManager
 {
+    public struct ClassStudentTuple
+    {
+        public Student Student {get; set;}
+        public Class Class {get; set;}
+    }
+
+    public struct ClassRoomSlotTuple
+    {
+        public Class Class {get; set;}
+        public Room Room {get; set;}
+        public TimeSlot Slot {get; set;}
+    }
+
     class Manager
     {
         // Mutable collections, expected to be edited by
@@ -17,6 +30,7 @@ namespace StudentManager
         // TODO Prevent overlapping timeslots
         public HashSet<TimeSlot> TimeSlots { get; private set; }
 
+        // TODO Need testing
         private HashSet<Tuple<Class, Student>> classStudents;
         private HashSet<Tuple<Class, Room, TimeSlot>> allocation;
 
@@ -28,6 +42,9 @@ namespace StudentManager
 
         public IEnumerable<Tuple<Class, Room, TimeSlot>> Allocation
         { get { return this.allocation; } }
+
+        public Dictionary<String, String> UriMapping { get; set; }
+        public IPersistenceService database;
 
         /// <summary>
         /// In memory constructor. All data is created fresh. Mostly for testing
@@ -55,8 +72,20 @@ namespace StudentManager
         /// </param>
         public Manager(IPersistenceService database, Dictionary<String, String> UriMapping)
         {
-            Classes = new HashSet<Class>(database.load<List<Class>>(UriMapping["classes"]));
-            Students = new HashSet<Student>(database.load<List<Student>>(UriMapping["students"]));
+            this.UriMapping = UriMapping;
+            this.database = database;
+
+            // FIXME What if any of the database resources isn't created yet?
+            Classes = database.load<HashSet<Class>>
+                (UriMapping["classes"]);
+            Students = database.load<HashSet<Student>>
+                (UriMapping["students"]);
+            Rooms = database.load<HashSet<Room>>
+                (UriMapping["rooms"]);
+            classStudents = database.load<HashSet<Tuple<Class, Student>>>
+                (UriMapping["class-students"]);
+            allocation = database.load<HashSet<Tuple<Class, Room, TimeSlot>>>
+                (UriMapping["allocation"]);
         }
 
         public Student GetStudentById(String id)
@@ -93,7 +122,7 @@ namespace StudentManager
 
         public bool RemoveStudentFromClass(Student s, Class c)
         {
-            // TODO This won't remove the student from Students
+            // FIXME This won't remove the student from Students
             return this.classStudents.Remove(new Tuple<Class, Student>(c, s));
         }
 
@@ -123,6 +152,36 @@ namespace StudentManager
         public bool RemoveClassRoomTimeSlot(Class cl, Room r, TimeSlot t)
         {
             return this.allocation.Remove(new Tuple<Class, Room, TimeSlot>(cl, r, t));
+        }
+
+        public void Save()
+        {
+            database.save<HashSet<Class>>
+                (UriMapping["classes"], Classes);
+            database.save<HashSet<Student>>
+                (UriMapping["students"], Students);
+            database.save<HashSet<Room>>
+                (UriMapping["rooms"], Rooms);
+            database.save<HashSet<TimeSlot>>
+                (UriMapping["timeslots"], TimeSlots);
+
+            var h = new HashSet<ClassStudentTuple>();
+            h.Add(new ClassStudentTuple() {
+                Student = new Student() {
+                    ID = "C1203L",
+                    Name = "Trung"
+                },
+                Class = new Class() {
+                    Name = "C120L"
+                }
+            });
+
+            database.save<HashSet<ClassStudentTuple>>("/tmp/set", h);
+
+//            database.save<HashSet<Tuple<Class, Student>>>
+//                (UriMapping["class-students"], classStudents);
+//            database.save<HashSet<Tuple<Class, Room, TimeSlot>>>
+//                (UriMapping["allocation"], allocation);
         }
     }
 }
