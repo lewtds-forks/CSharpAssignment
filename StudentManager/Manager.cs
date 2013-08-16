@@ -85,7 +85,7 @@ namespace StudentManager
             Rooms = database.load<HashSet<Room>>
                 (UriMapping["rooms"]);
             TimeSlots = database.load<HashSet<TimeSlot>>
-                (UriMapping["slots"]);
+                (UriMapping["timeslots"]);
             var _classStudents = database.load<List<ClassStudentTuple>>
                 (UriMapping["class-students"]);
             var _allocation = database.load<List<ClassRoomSlotTuple>>
@@ -217,7 +217,7 @@ namespace StudentManager
                     SlotId = tuple.Item3.GetId()
                 });
             }
-            
+
             database.save<List<ClassRoomSlotTuple>>
                 (UriMapping["allocation"], _allocation);
         }
