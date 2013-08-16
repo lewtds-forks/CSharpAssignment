@@ -9,8 +9,11 @@ namespace StudentManager
         public String Name { get; set; }
     }
 
-    public struct TimeSlot
+    public class TimeSlot : Identity
     {
+        [Identity.ID]
+        public String Name {get; set; }
+
         public DateTime StartTime { get; set; }
 
         public DateTime EndTime { get; set; }
