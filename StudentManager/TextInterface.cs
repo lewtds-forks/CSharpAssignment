@@ -193,7 +193,7 @@ namespace StudentManager.TextUi
                 AddChoice("1", "Select student ID", SelectStudent);
                 AddChoice("2", "Add student", AddStudent);
                 AddChoice("3", "Remove class", RemoveClass);
-                AddChoice("4", "Change class info", ChangeClassInfo);
+                AddChoice("4", "Change class info", ChangeInfo);
                 AddChoice("B", "Back", Stop);
                 AddChoice("Q", "Quit", Quit);
 
@@ -234,20 +234,49 @@ namespace StudentManager.TextUi
                 Console.Write("Select a student ID: ");
                 String id = Console.ReadLine();
                 Student s = parent.manager.GetStudentById(id);
-                new StudentScreen(s, parent.manager).Start();
+                new EachStudentScreen(s, parent.manager, this).Start();
             }
 
             void RemoveClass()
             {
             }
 
-            void ChangeClassInfo() {}
+            void ChangeInfo() {}
         }
     }
 
     class EachStudentScreen : ChoiceScreen
     {
+        Student student;
+        Manager manager;
 
+        public EachStudentScreen(Student student, Manager manager, ChoiceScreen parent) :
+            base(parent)
+        {
+            this.student = student;
+            this.manager = manager;
+            AddChoice("1", "Remove student", RemoveStudent);
+            AddChoice("2", "Transfer student to a new class", ChangeClass);
+            AddChoice("3", "Update student's info", ChangeInfo);
+            AddChoice("B", "Back", Stop);
+        }
+
+        public void RemoveStudent()
+        {
+            // Confirmation
+            Console.Write("Are you sure? (Y/N) ");
+            String confirm = Console.ReadLine();
+            if (new string[] {"Y", "y"}.Contains(confirm))
+            {
+
+            }
+        }
+
+        public void ChangeClass()
+        {}
+
+        public void ChangeInfo()
+        {}
     }
 }
 
