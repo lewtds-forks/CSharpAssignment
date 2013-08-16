@@ -68,7 +68,7 @@ namespace StudentManager
         }
 
         public static Identity GetObjectById(IEnumerable<Identity> collection,
-                                             String id)
+                                             object id)
         {
             return (from obj in collection
                     where obj.GetId().Equals(id)
