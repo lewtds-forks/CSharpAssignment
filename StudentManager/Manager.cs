@@ -192,10 +192,26 @@ namespace StudentManager
             database.save<HashSet<TimeSlot>>
                 (UriMapping["timeslots"], TimeSlots);
 
-//            database.save<HashSet<Tuple<Class, Student>>>
-//                (UriMapping["class-students"], classStudents);
-//            database.save<HashSet<Tuple<Class, Room, TimeSlot>>>
-//                (UriMapping["allocation"], allocation);
+            // Custom serialization
+            var _classStudents = new List<ClassStudentTuple>();
+            var _allocation = new List<ClassRoomSlotTuple>();
+
+            foreach(var tuple in classStudents)
+            {
+                _classStudents.Add(new ClassStudentTuple() {
+                    StudentId = tuple.Item2.GetId(),
+                    ClassId = tuple.Item1.GetId()
+                });
+            }
+
+            foreach(var tuple in allocation)
+            {
+                _allocation.Add(new ClassRoomSlotTuple() {
+                    ClassId = tuple.Item1.GetId(),
+                    RoomId = tuple.Item2.GetId(),
+                    SlotId = tuple.Item3.GetId()
+                });
+            }
         }
     }
 }
