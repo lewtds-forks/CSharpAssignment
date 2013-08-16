@@ -28,11 +28,11 @@ namespace StudentManager.Tests
 
         [Test]
         public void TestGetStudentByID() {
-            Assert.Null(m.GetStudentById("B01415"));
+            Assert.Null(Identity.GetObjectById(m.Students, "B01415"));
 
             m.Students.Add(trung);
-            Assert.AreSame(trung, m.GetStudentById("B01414"));
-            Assert.Null(m.GetStudentById(""));
+            Assert.AreSame(trung, Identity.GetObjectById(m.Students, "B01414"));
+            Assert.Null(Identity.GetObjectById(m.Students, ""));
         }
 
         [Test]

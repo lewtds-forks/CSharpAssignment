@@ -20,6 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -61,13 +62,26 @@ namespace StudentManager
             }
         }
 
+        public object GetId()
+        {
+            return this.IdGetMethod.Invoke(this, null);
+        }
+
+        public static Identity GetObjectById(IEnumerable<Identity> collection,
+                                             String id)
+        {
+            return (from obj in collection
+                    where obj.GetId().Equals(id)
+                    select obj).SingleOrDefault();
+        }
+
         #region IEquatable[Identity] implementation
         public bool Equals(Identity other)
         {
             if (this.IdGetMethod != null)
             {
-                object otherId = other.IdGetMethod.Invoke(other, null);
-                object thisId = this.IdGetMethod.Invoke(this, null);
+                object otherId = other.GetId();
+                object thisId = this.GetId();
                 return thisId.Equals(otherId);
             } else
             {
@@ -84,7 +98,7 @@ namespace StudentManager
         public override int GetHashCode()
         {
             if (this.IdGetMethod != null)
-                return this.IdGetMethod.Invoke(this, null).GetHashCode();
+                return this.GetId().GetHashCode();
             else
                 return base.GetHashCode();
         }
