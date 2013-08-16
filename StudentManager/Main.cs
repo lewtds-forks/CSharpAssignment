@@ -41,6 +41,7 @@ namespace StudentManager
 
             var t1 = new TimeSlot()
             {
+                Name = "night",
                 StartTime = DateTime.MinValue.AddDays(4).AddHours(17).AddMinutes(30),
                 EndTime = DateTime.MinValue.AddDays(4).AddHours(19).AddMinutes(30)
             };
@@ -65,8 +66,8 @@ namespace StudentManager
             m.UriMapping.Add("students", "/tmp/sm/students.xml");
             m.UriMapping.Add("rooms", "/tmp/sm/rooms.xml");
             m.UriMapping.Add("timeslots", "/tmp/sm/timeslots.xml");
-//            m.UriMapping.Add("class-students", "/tmp/sm/class-students.xml");
-//            m.UriMapping.Add("allocation", "/tmp/sm/allocation.xml");
+            m.UriMapping.Add("class-students", "/tmp/sm/class-students.xml");
+            m.UriMapping.Add("allocation", "/tmp/sm/allocation.xml");
 //
             m.database = new XMLDatabase();
 
