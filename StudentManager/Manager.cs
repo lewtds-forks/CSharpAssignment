@@ -4,17 +4,19 @@ using System.Linq;
 
 namespace StudentManager
 {
+    // The purpose of these 2 structs is only to store their respective objects'
+    // ID
     public struct ClassStudentTuple
     {
-        public Student Student {get; set;}
-        public Class Class {get; set;}
+        public object StudentId {get; set;}
+        public object ClassId {get; set;}
     }
 
     public struct ClassRoomSlotTuple
     {
-        public Class Class {get; set;}
-        public Room Room {get; set;}
-        public TimeSlot Slot {get; set;}
+        public object ClassId {get; set;}
+        public object RoomId {get; set;}
+        public object SlotId {get; set;}
     }
 
     class Manager
@@ -82,10 +84,35 @@ namespace StudentManager
                 (UriMapping["students"]);
             Rooms = database.load<HashSet<Room>>
                 (UriMapping["rooms"]);
-            classStudents = database.load<HashSet<Tuple<Class, Student>>>
+            TimeSlots = database.load<HashSet<TimeSlot>>
+                (UriMapping["slots"]);
+            var _classStudents = database.load<List<ClassStudentTuple>>
                 (UriMapping["class-students"]);
-            allocation = database.load<HashSet<Tuple<Class, Room, TimeSlot>>>
+            var _allocation = database.load<List<ClassRoomSlotTuple>>
                 (UriMapping["allocation"]);
+
+            // These "relationships" need manual deserialization
+            classStudents = new HashSet<Tuple<Class, Student>>();
+            foreach(var tuple in _classStudents)
+            {
+                var s = (Student) Identity
+                    .GetObjectById(this.Students, tuple.StudentId);
+                var c = (Class) Identity
+                    .GetObjectById(this.Classes, tuple.ClassId);
+                RegisterStudentWithClass(s, c);
+            }
+
+            allocation = new HashSet<Tuple<Class, Room, TimeSlot>>();
+            foreach(var tuple in _allocation)
+            {
+                var klass = (Class) Identity
+                    .GetObjectById(this.Classes, tuple.ClassId);
+                var room = (Room) Identity
+                    .GetObjectById(this.Rooms, tuple.RoomId);
+                var slot = (TimeSlot) Identity
+                    .GetObjectById(this.TimeSlots, tuple.SlotId);
+                RegisterClassRoomTimeSlot(klass, room, slot);
+            }
         }
 
         public Student GetStudentById(String id)
@@ -164,19 +191,6 @@ namespace StudentManager
                 (UriMapping["rooms"], Rooms);
             database.save<HashSet<TimeSlot>>
                 (UriMapping["timeslots"], TimeSlots);
-
-            var h = new HashSet<ClassStudentTuple>();
-            h.Add(new ClassStudentTuple() {
-                Student = new Student() {
-                    ID = "C1203L",
-                    Name = "Trung"
-                },
-                Class = new Class() {
-                    Name = "C120L"
-                }
-            });
-
-            database.save<HashSet<ClassStudentTuple>>("/tmp/set", h);
 
 //            database.save<HashSet<Tuple<Class, Student>>>
 //                (UriMapping["class-students"], classStudents);
