@@ -194,7 +194,6 @@ namespace StudentManager
 
             // Custom serialization
             var _classStudents = new List<ClassStudentTuple>();
-            var _allocation = new List<ClassRoomSlotTuple>();
 
             foreach(var tuple in classStudents)
             {
@@ -204,6 +203,12 @@ namespace StudentManager
                 });
             }
 
+            database.save<List<ClassStudentTuple>>
+                (UriMapping["class-students"], _classStudents);
+
+
+            var _allocation = new List<ClassRoomSlotTuple>();
+
             foreach(var tuple in allocation)
             {
                 _allocation.Add(new ClassRoomSlotTuple() {
@@ -212,6 +217,9 @@ namespace StudentManager
                     SlotId = tuple.Item3.GetId()
                 });
             }
+            
+            database.save<List<ClassRoomSlotTuple>>
+                (UriMapping["allocation"], _allocation);
         }
     }
 }
