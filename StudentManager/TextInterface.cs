@@ -168,7 +168,8 @@ namespace StudentManager.TextUi
             this.PreMenuHook += () => {
                 foreach (var cl in manager.Classes)
                 {
-                    Console.WriteLine(String.Format("{0} {1}", cl.Name, cl.Teacher));
+                    Console.WriteLine(
+                        String.Format("{0} {1}", cl.Name, cl.Teacher));
                 }
             };
         }
