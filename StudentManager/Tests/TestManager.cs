@@ -85,6 +85,7 @@ namespace StudentManager.Tests
         };
 
         private TimeSlot evening = new TimeSlot() {
+            Name = "evening",
             StartTime = DateTime.MinValue.AddDays(4).AddHours(17).AddMinutes(30),
             EndTime = DateTime.MinValue.AddDays(4).AddHours(19).AddMinutes(30)
         };
