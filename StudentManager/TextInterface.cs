@@ -83,6 +83,25 @@ namespace StudentManager.TextUi
             }
         }
 
+        public bool Confirm(string message, string yes = "Y", string no = "N")
+        {
+            while (true)
+            {
+                Console.WriteLine(
+                    String.Format("{0} ({1}/{2})", message, yes, no));
+                var choice = Console.ReadLine();
+                if (yes.ToLower().Equals(choice.ToLower()))
+                {
+                    return true;
+                }
+                else if (no.ToLower().Equals(choice.ToLower()))
+                {
+                    return false;
+                }
+                Console.WriteLine("No such choice!");
+            }
+        }
+
         /// <summary>
         /// Stop this instance and return to parent screen.
         /// </summary>
