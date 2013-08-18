@@ -195,7 +195,7 @@ namespace StudentManager.TextUi
         {
             Console.Write("Select a class ID: ");
             String name = Console.ReadLine();
-            Class c = manager.GetClassByName(name);
+            var c = (Class) Identity.GetObjectById(manager.Classes, name);
             new EachClassScreen(c, this).Start();
         }
 
@@ -253,7 +253,8 @@ namespace StudentManager.TextUi
             {
                 Console.Write("Select a student ID: ");
                 String id = Console.ReadLine();
-                Student s = parent.manager.GetStudentById(id);
+                var s = (Student) Identity
+                    .GetObjectById(parent.manager.Students, id);
                 new EachStudentScreen(s, c, parent.manager, this).Start();
             }
 
