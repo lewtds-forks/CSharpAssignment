@@ -232,7 +232,7 @@ namespace StudentManager.TextUi
             String id = Console.ReadLine();
             var s = (Student) Identity
                 .GetObjectById(this.manager.Students, id);
-            new EachStudentScreen(s, c, this.manager, this).Start();
+            new StudentScreen(s, c, this.manager, this).Start();
         }
 
         void RemoveClass()
@@ -252,20 +252,20 @@ namespace StudentManager.TextUi
         void ChangeInfo() {}
     }
 
-    class EachStudentScreen : ChoiceScreen
+    class StudentScreen : ChoiceScreen
     {
         Student student;
-        Class klass;
+        Class c;
         Manager manager;
 
-        public EachStudentScreen(Student student,
+        public StudentScreen(Student student,
                                  Class klass,
                                  Manager manager,
                                  ChoiceScreen parent) :
             base(parent)
         {
             this.student = student;
-            this.klass = klass;
+            this.c = klass;
             this.manager = manager;
             AddChoice("1", "Remove student", RemoveStudent);
             AddChoice("2", "Transfer student to a new class", ChangeClass);
@@ -283,7 +283,7 @@ namespace StudentManager.TextUi
              "student command instead."))
             {
                 manager.Students.Remove(student);
-                manager.RemoveStudentFromClass(student, klass);
+                manager.RemoveStudentFromClass(student, c);
                 Stop();
             }
         }
@@ -295,7 +295,7 @@ namespace StudentManager.TextUi
             var otherClass = (Class) Identity
                 .GetObjectById(manager.Classes, className);
             if (otherClass != null &&
-                manager.SwitchClassOfStudent(student, klass, otherClass)) {
+                manager.SwitchClassOfStudent(student, c, otherClass)) {
                 Stop();
             }
             else {
