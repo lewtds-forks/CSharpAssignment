@@ -125,38 +125,8 @@ namespace StudentManager.TextUi
     {
         Manager manager;
 
-        public MainScreen(Manager manager): base(null)
-        {
-            this.manager = manager;
-
-            AddChoice("1", "Manage classes", ManageClasses);
-            AddChoice("2", "Manage timetable", ManageTimetable);
-            AddChoice("Q", "Quit", Quit);
-        }
-
-        public void ManageClasses()
-        {
-            new ClassScreen(this.manager, this).Start();
-        }
-
-        public void ManageTimetable()
-        {
-
-        }
-
-        public override void Stop()
-        {
-            manager.Save();
-            base.Stop();
-        }
-    }
-
-    class ClassScreen : ChoiceScreen
-    {
-        Manager manager;
-
-        public ClassScreen(Manager manager, ChoiceScreen parent):
-            base(parent)
+        public MainScreen(Manager manager):
+            base(null)
         {
             this.manager = manager;
 
@@ -196,84 +166,90 @@ namespace StudentManager.TextUi
             Console.Write("Select a class ID: ");
             String name = Console.ReadLine();
             var c = (Class) Identity.GetObjectById(manager.Classes, name);
-            new EachClassScreen(c, this).Start();
+            new ClassScreen(c, manager, this).Start();
         }
 
-        class EachClassScreen : ChoiceScreen
+        public override void Stop() {
+            manager.Save();
+            base.Stop();
+        }
+
+    }
+
+    class ClassScreen : ChoiceScreen
+    {
+        Class c;
+        Manager manager;
+
+        public ClassScreen(Class c, Manager manager, ChoiceScreen parent):
+            base(parent)
         {
-            Class c;
-            ClassScreen parent;
+            this.c = c;
+            this.manager = manager;
 
-            public EachClassScreen(Class c, ClassScreen parent):
-                base(parent)
-            {
-                this.c = c;
-                this.parent = parent;
+            AddChoice("1", "Select student ID", SelectStudent);
+            AddChoice("2", "Add student", AddStudent);
+            AddChoice("3", "Remove class", RemoveClass);
+            AddChoice("4", "Change class info", ChangeInfo);
+            AddChoice("B", "Back", Stop);
+            AddChoice("Q", "Quit", Quit);
 
-                AddChoice("1", "Select student ID", SelectStudent);
-                AddChoice("2", "Add student", AddStudent);
-                AddChoice("3", "Remove class", RemoveClass);
-                AddChoice("4", "Change class info", ChangeInfo);
-                AddChoice("B", "Back", Stop);
-                AddChoice("Q", "Quit", Quit);
+            this.PreMenuHook += () => {
+                var studentList =
+                    (from tuple in this.manager.ClassStudents
+                     where tuple.Item1.Equals(this.c)
+                     select tuple.Item2);
 
-                this.PreMenuHook += () => {
-                    var studentList =
-                        (from tuple in this.parent.manager.ClassStudents
-                         where tuple.Item1.Equals(this.c)
-                         select tuple.Item2);
-
-                    foreach (Student student in studentList)
-                    {
-                        Console.WriteLine(String.Format("{0} {1}", student.ID, student.Name));
-                    }
-                };
-            }
-
-            void AddStudent()
-            {
-                Console.Write("Name: ");
-                String name = Console.ReadLine();
-                Console.Write("Student ID: ");
-                String id = Console.ReadLine();
-                Console.Write("Address (optional): ");
-                String addr = Console.ReadLine();
-
-                Student s = new Student() {
-                    ID = id,
-                    Name = name,
-                    Address = addr
-                };
-
-                parent.manager.Students.Add(s);
-                parent.manager.RegisterStudentWithClass(s, c);
-            }
-
-            void SelectStudent()
-            {
-                Console.Write("Select a student ID: ");
-                String id = Console.ReadLine();
-                var s = (Student) Identity
-                    .GetObjectById(parent.manager.Students, id);
-                new EachStudentScreen(s, c, parent.manager, this).Start();
-            }
-
-            void RemoveClass()
-            {
-                if(Confirm("Are you sure you want to remove this class?"))
+                foreach (Student student in studentList)
                 {
-                    parent.manager.Classes.Remove(c);
-                    (from tuple in parent.manager.ClassStudents
-                     where tuple.Item1.Equals(c)
-                     select new { Class = tuple.Item1, Student = tuple.Item2 })
-                    .Select((t) => {
-                            return parent.manager.RemoveStudentFromClass(t.Student, t.Class);
-                        });
+                    Console.WriteLine(String.Format("{0} {1}", student.ID, student.Name));
                 }
-            }
-
-            void ChangeInfo() {}
+            };
         }
+
+        void AddStudent()
+        {
+            Console.Write("Name: ");
+            String name = Console.ReadLine();
+            Console.Write("Student ID: ");
+            String id = Console.ReadLine();
+            Console.Write("Address (optional): ");
+            String addr = Console.ReadLine();
+
+            Student s = new Student() {
+                ID = id,
+                Name = name,
+                Address = addr
+            };
+
+            this.manager.Students.Add(s);
+            this.manager.RegisterStudentWithClass(s, c);
+        }
+
+        void SelectStudent()
+        {
+            Console.Write("Select a student ID: ");
+            String id = Console.ReadLine();
+            var s = (Student) Identity
+                .GetObjectById(this.manager.Students, id);
+            new EachStudentScreen(s, c, this.manager, this).Start();
+        }
+
+        void RemoveClass()
+        {
+            if(Confirm("Are you sure you want to remove this class?"))
+            {
+                this.manager.Classes.Remove(c);
+                (from tuple in this.manager.ClassStudents
+                 where tuple.Item1.Equals(c)
+                 select new { Class = tuple.Item1, Student = tuple.Item2 })
+                .Select((t) => {
+                        return this.manager.RemoveStudentFromClass(t.Student, t.Class);
+                    });
+            }
+        }
+
+        void ChangeInfo() {}
     }
 
     class EachStudentScreen : ChoiceScreen
