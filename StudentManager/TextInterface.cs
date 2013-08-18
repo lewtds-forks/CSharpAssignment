@@ -254,11 +254,21 @@ namespace StudentManager.TextUi
                 Console.Write("Select a student ID: ");
                 String id = Console.ReadLine();
                 Student s = parent.manager.GetStudentById(id);
-                new EachStudentScreen(s, parent.manager, this).Start();
+                new EachStudentScreen(s, c, parent.manager, this).Start();
             }
 
             void RemoveClass()
             {
+                if(Confirm("Are you sure you want to remove this class?"))
+                {
+                    parent.manager.Classes.Remove(c);
+                    (from tuple in parent.manager.ClassStudents
+                     where tuple.Item1.Equals(c)
+                     select new { Class = tuple.Item1, Student = tuple.Item2 })
+                    .Select((t) => {
+                            return parent.manager.RemoveStudentFromClass(t.Student, t.Class);
+                        });
+                }
             }
 
             void ChangeInfo() {}
@@ -268,35 +278,67 @@ namespace StudentManager.TextUi
     class EachStudentScreen : ChoiceScreen
     {
         Student student;
+        Class klass;
         Manager manager;
 
-        public EachStudentScreen(Student student, Manager manager, ChoiceScreen parent) :
+        public EachStudentScreen(Student student,
+                                 Class klass,
+                                 Manager manager,
+                                 ChoiceScreen parent) :
             base(parent)
         {
             this.student = student;
+            this.klass = klass;
             this.manager = manager;
             AddChoice("1", "Remove student", RemoveStudent);
             AddChoice("2", "Transfer student to a new class", ChangeClass);
             AddChoice("3", "Update student's info", ChangeInfo);
             AddChoice("B", "Back", Stop);
+            AddChoice("Q", "Quit", Quit);
         }
 
         public void RemoveStudent()
         {
             // Confirmation
-            Console.Write("Are you sure? (Y/N) ");
-            String confirm = Console.ReadLine();
-            if (new string[] {"Y", "y"}.Contains(confirm))
+            if (Confirm("Are you sure you want to remove this student?\n" +
+             "You will have to create this student again if you want to" +
+             "add him/her into another class. Consider using the transfer" +
+             "student command instead."))
             {
-
+                manager.Students.Remove(student);
+                manager.RemoveStudentFromClass(student, klass);
+                Stop();
             }
         }
 
         public void ChangeClass()
-        {}
+        {
+            Console.Write("Class name to transfer to: ");
+            var className = Console.ReadLine();
+            var otherClass = (Class) Identity
+                .GetObjectById(manager.Classes, className);
+            if (otherClass != null &&
+                manager.SwitchClassOfStudent(student, klass, otherClass)) {
+                Stop();
+            }
+            else {
+                Console.WriteLine("There was an error!");
+            }
+        }
 
         public void ChangeInfo()
-        {}
+        {
+            Console.Write("Name: ");
+            var name = Console.ReadLine();
+            Console.Write("ID: ");
+            var id = Console.ReadLine();
+            Console.Write("Address (optional): ");
+            var addr = Console.ReadLine();
+
+            student.Name = name;
+            student.ID = id;
+            student.Address = addr;
+        }
     }
 }
 
