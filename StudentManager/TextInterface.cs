@@ -361,10 +361,14 @@ namespace StudentManager.TextUi
 
             this.PreMenuHook += () => {
                 Console.Clear();
-                Console.WriteLine("Name: " + student.Name);
-                Console.WriteLine("ID: " + student.ID);
-                if (! String.IsNullOrEmpty(student.Address))
-                    Console.WriteLine("Address: ", student.Address);
+                EmphasizeWriteLine("STUDENT INFO");
+                Console.WriteLine(String.Format("ID: {0,-10}Name: {1,10}",
+                                                student.ID,
+                                                student.Name));
+                var addr = String.IsNullOrWhiteSpace(student.Address) ?
+                    "N/A" : student.Address;
+                Console.WriteLine("Address: " + addr);
+                Console.WriteLine();
             };
         }
 
