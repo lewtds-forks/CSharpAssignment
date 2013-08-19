@@ -286,8 +286,11 @@ namespace StudentManager.TextUi
                 Address = addr
             };
 
-            this.manager.Students.Add(s);
-            this.manager.RegisterStudentWithClass(s, c);
+            if(Confirm("Are you sure?"))
+            {
+                this.manager.Students.Add(s);
+                this.manager.RegisterStudentWithClass(s, c);
+            }
         }
 
         void SelectStudent()
