@@ -24,9 +24,12 @@ using System.Linq;
 using System.Collections.Specialized;
 using System.Collections;
 
+
+
 namespace StudentManager.TextUi
 {
-    abstract class ChoiceScreen
+    using StudentManager.Utility;
+    public abstract class ChoiceScreen
     {
         private OrderedDictionary commands;
         private bool running = false;
@@ -81,52 +84,10 @@ namespace StudentManager.TextUi
                         PostActionHook();
                 } else
                 {
-                    ErrorWriteLine("No such choice! Press any key to continue...");
+                    this.ErrorWriteLine("No such choice! Press any key to continue...");
                     Console.ReadKey();
                 }
             }
-        }
-
-        public bool Confirm(string message, string yes = "Y", string no = "N")
-        {
-            while (true)
-            {
-                EmphasizeWriteLine(
-                    String.Format("{0} ({1}/{2})", message, yes, no),
-                    bg: ConsoleColor.Red);
-                var choice = Console.ReadLine();
-                if (yes.ToLower().Equals(choice.ToLower()))
-                {
-                    return true;
-                }
-                else if (no.ToLower().Equals(choice.ToLower()))
-                {
-                    return false;
-                }
-                ErrorWriteLine("No such choice!");
-            }
-        }
-
-        public void EmphasizeWrite(string message,
-                                   ConsoleColor fg=ConsoleColor.White,
-                                   ConsoleColor bg=ConsoleColor.Blue)
-        {
-            Console.BackgroundColor = bg;
-            Console.ForegroundColor = fg;
-            Console.Write(message);
-            Console.ResetColor();
-        }
-
-        public void EmphasizeWriteLine(string message,
-                                       ConsoleColor fg=ConsoleColor.White,
-                                       ConsoleColor bg=ConsoleColor.Blue)
-        {
-            EmphasizeWrite(message + '\n', fg, bg);
-        }
-
-        public void ErrorWriteLine(String message)
-        {
-            EmphasizeWriteLine(message, bg: ConsoleColor.Red);
         }
 
         /// <summary>
@@ -163,12 +124,12 @@ namespace StudentManager.TextUi
 
             this.PreMenuHook += () => {
                 Console.Clear();
-                int l1 = 14, l2 = 10;
-
+                int l1 = 15, l2 = 15;
 
                 Console.WriteLine("= Student Management System =\n\n");
 
-                EmphasizeWriteLine(
+                this.EmphasizeWriteLine("CLASS LIST".PadCenter(l1+l2));
+                this.EmphasizeWriteLine(
                         String.Format("{0, " + l1 + "}{1," + l2 + "}",
                                       "Class name", "Teacher"));
 
@@ -178,6 +139,11 @@ namespace StudentManager.TextUi
                         String.Format("{0, " + l1 + "}{1," + l2 + "}", cl.Name, cl.Teacher));
                 }
                 Console.WriteLine("\n----\n");
+            };
+
+            Console.CancelKeyPress += delegate {
+                Console.WriteLine("\nControl - C pressed.");
+                Stop();
             };
         }
 
@@ -194,7 +160,7 @@ namespace StudentManager.TextUi
                 Name = name,
                 Teacher = teacher
             };
-            if (Confirm("Are you sure?"))
+            if (this.Confirm("Are you sure?"))
                 manager.Classes.Add(c);
         }
 
@@ -209,14 +175,16 @@ namespace StudentManager.TextUi
             }
             else
             {
-                ErrorWriteLine("No such class!");
+                this.ErrorWriteLine("No such class!");
                 Console.ReadKey();
             }
 
         }
 
         public override void Stop() {
+            Console.WriteLine("Saving...");
             manager.Save();
+            Console.WriteLine("Done!");
             base.Stop();
         }
 
@@ -242,13 +210,16 @@ namespace StudentManager.TextUi
 
             this.PreMenuHook += () => {
                 Console.Clear();
-                Console.WriteLine("Class info");
+                Console.WriteLine("= Student Management System =\n\n");
+
+                this.EmphasizeWriteLine("CLASS INFO");
                 Console.WriteLine(String.Format
-                    ("Class name: {0}\n" +
+                    ("Name   : {0}\n" +
                      "Teacher: {1}\n" +
                      "", c.Name, c.Teacher));
 
-                EmphasizeWriteLine(String.Format("{0,10}{1,10}{2,10}",
+                this.EmphasizeWriteLine("STUDENT LIST".PadCenter(30));
+                this.EmphasizeWriteLine(String.Format("{0,10}{1,10}{2,10}",
                                                 "ID",
                                                 "Name",
                                                 "Address"));
@@ -286,7 +257,7 @@ namespace StudentManager.TextUi
                 Address = addr
             };
 
-            if(Confirm("Are you sure?"))
+            if(this.Confirm("Are you sure?"))
             {
                 this.manager.Students.Add(s);
                 this.manager.RegisterStudentWithClass(s, c);
@@ -305,14 +276,14 @@ namespace StudentManager.TextUi
             }
             else
             {
-                ErrorWriteLine("No such student!");
+                this.ErrorWriteLine("No such student!");
                 Console.ReadKey();
             }
         }
 
         void RemoveClass()
         {
-            if(Confirm("Are you sure you want to remove this class?"))
+            if(this.Confirm("Are you sure you want to remove this class?"))
             {
                 this.manager.Classes.Remove(c);
                 (from tuple in this.manager.ClassStudents
@@ -330,7 +301,7 @@ namespace StudentManager.TextUi
             var name = Console.ReadLine();
             Console.Write("Teacher: ");
             var teacher = Console.ReadLine();
-            if(Confirm("Are you sure you want to change this class' info?"))
+            if(this.Confirm("Are you sure you want to change this class' info?"))
             {
                 c.Name = name;
                 c.Teacher = teacher;
@@ -361,21 +332,24 @@ namespace StudentManager.TextUi
 
             this.PreMenuHook += () => {
                 Console.Clear();
-                EmphasizeWriteLine("STUDENT INFO");
-                Console.WriteLine(String.Format("ID: {0,-10}Name: {1,10}",
+
+                Console.WriteLine("= Student Management System =\n\n");
+
+                this.EmphasizeWriteLine("STUDENT INFO".PadCenter(30));
+                Console.WriteLine(String.Format("ID: {0,-10}Name: {1,-10}",
                                                 student.ID,
                                                 student.Name));
                 var addr = String.IsNullOrWhiteSpace(student.Address) ?
                     "N/A" : student.Address;
                 Console.WriteLine("Address: " + addr);
-                Console.WriteLine();
+                Console.WriteLine("\n----\n");
             };
         }
 
         public void RemoveStudent()
         {
             // Confirmation
-            if (Confirm("Are you sure you want to remove this student?\n" +
+            if (this.Confirm("Are you sure you want to remove this student?\n" +
              "You will have to create this student again if you want to" +
              "add him/her into another class. Consider using the transfer" +
              "student command instead."))
@@ -397,7 +371,7 @@ namespace StudentManager.TextUi
                 Stop();
             }
             else {
-                ErrorWriteLine("There was an error!");
+                this.ErrorWriteLine("There was an error!");
                 Console.ReadKey();
             }
         }
@@ -411,7 +385,7 @@ namespace StudentManager.TextUi
             Console.Write("Address (optional): ");
             var addr = Console.ReadLine();
 
-            if (Confirm("Are you sure?"))
+            if (this.Confirm("Are you sure?"))
             {
                 student.Name = name;
                 student.ID = id;
