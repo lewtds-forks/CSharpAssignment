@@ -2,7 +2,7 @@
 //  TextInterface.cs
 //  
 //  Author:
-//       chin <${AuthorEmail}>
+//       Trung Ngo <ndtrung4419@gmail.com>
 // 
 //  Copyright (c) 2013 chin
 // 
