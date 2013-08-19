@@ -246,10 +246,21 @@ namespace StudentManager.TextUi
                 .Select((t) => {
                         return this.manager.RemoveStudentFromClass(t.Student, t.Class);
                     });
+                Stop();
             }
         }
 
-        void ChangeInfo() {}
+        void ChangeInfo() {
+            Console.Write("Class name: ");
+            var name = Console.ReadLine();
+            Console.Write("Teacher: ");
+            var teacher = Console.ReadLine();
+            if(Confirm("Are you sure you want to change this class'  info?"))
+            {
+                c.Name = name;
+                c.Teacher = teacher;
+            }
+        }
     }
 
     class StudentScreen : ChoiceScreen
