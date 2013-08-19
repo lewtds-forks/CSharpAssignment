@@ -62,12 +62,15 @@ namespace StudentManager.TextUi
                                   de.Key,
                                   (de.Value as Tuple<String, Action>).Item1));
                 }
+
+                Console.Write("\nChoice: ");
                 
                 String choice = System.Console.ReadLine();
                 // FIXME This implementation does not allow key aliases
                 //       i.e. using both "b"(ack) and "q"(uit) for the
                 //       quit action on the main screen.
-                if (commands.Contains(choice))
+                if (commands.Contains(choice = choice.ToUpper()) ||
+                    commands.Contains(choice = choice.ToLower()))
                 {
                     if (PreActionHook != null)
                         PreActionHook();
@@ -78,7 +81,8 @@ namespace StudentManager.TextUi
                         PostActionHook();
                 } else
                 {
-                    Console.WriteLine("No such choice!");
+                    Console.WriteLine("No such choice! Press any key to continue...");
+                    Console.ReadKey();
                 }
             }
         }
@@ -87,8 +91,9 @@ namespace StudentManager.TextUi
         {
             while (true)
             {
-                Console.WriteLine(
-                    String.Format("{0} ({1}/{2})", message, yes, no));
+                EmphasizeWriteLine(
+                    String.Format("{0} ({1}/{2})", message, yes, no),
+                    bg: ConsoleColor.Red);
                 var choice = Console.ReadLine();
                 if (yes.ToLower().Equals(choice.ToLower()))
                 {
@@ -100,6 +105,23 @@ namespace StudentManager.TextUi
                 }
                 Console.WriteLine("No such choice!");
             }
+        }
+
+        public void EmphasizeWrite(string message,
+                                   ConsoleColor fg=ConsoleColor.White,
+                                   ConsoleColor bg=ConsoleColor.Blue)
+        {
+            Console.BackgroundColor = bg;
+            Console.ForegroundColor = fg;
+            Console.Write(message);
+            Console.ResetColor();
+        }
+
+        public void EmphasizeWriteLine(string message,
+                                       ConsoleColor fg=ConsoleColor.White,
+                                       ConsoleColor bg=ConsoleColor.Blue)
+        {
+            EmphasizeWrite(message + '\n', fg, bg);
         }
 
         /// <summary>
@@ -132,15 +154,25 @@ namespace StudentManager.TextUi
 
             AddChoice("1", "Add a class", AddClass);
             AddChoice("2", "Select a class to edit", SelectClass);
-            AddChoice("B", "Back", Stop);
             AddChoice("Q", "Quit", Quit);
 
             this.PreMenuHook += () => {
+                Console.Clear();
+                int l1 = 14, l2 = 10;
+
+
+                Console.WriteLine("= Student Management System =\n\n");
+
+                EmphasizeWriteLine(
+                        String.Format("{0, " + l1 + "}{1," + l2 + "}",
+                                      "Class name", "Teacher"));
+
                 foreach (var cl in manager.Classes)
                 {
                     Console.WriteLine(
-                        String.Format("{0} {1}", cl.Name, cl.Teacher));
+                        String.Format("{0, " + l1 + "}{1," + l2 + "}", cl.Name, cl.Teacher));
                 }
+                Console.WriteLine("\n----\n");
             };
         }
 
@@ -157,8 +189,8 @@ namespace StudentManager.TextUi
                 Name = name,
                 Teacher = teacher
             };
-
-            manager.Classes.Add(c);
+            if (Confirm("Are you sure?"))
+                manager.Classes.Add(c);
         }
 
         public void SelectClass()
@@ -166,7 +198,16 @@ namespace StudentManager.TextUi
             Console.Write("Select a class ID: ");
             String name = Console.ReadLine();
             var c = (Class) Identity.GetObjectById(manager.Classes, name);
-            new ClassScreen(c, manager, this).Start();
+            if (c != null)
+            {
+                new ClassScreen(c, manager, this).Start();
+            }
+            else
+            {
+                Console.WriteLine("No such class!");
+                Console.ReadKey();
+            }
+
         }
 
         public override void Stop() {
@@ -195,15 +236,33 @@ namespace StudentManager.TextUi
             AddChoice("Q", "Quit", Quit);
 
             this.PreMenuHook += () => {
+                Console.Clear();
+                Console.WriteLine("Class info");
+                Console.WriteLine(String.Format
+                    ("Class name: {0}\n" +
+                     "Teacher: {1}\n" +
+                     "", c.Name, c.Teacher));
+
+                EmphasizeWriteLine(String.Format("{0,10}{1,10}{2,10}",
+                                                "ID",
+                                                "Name",
+                                                "Address"));
+
                 var studentList =
                     (from tuple in this.manager.ClassStudents
                      where tuple.Item1.Equals(this.c)
                      select tuple.Item2);
-
                 foreach (Student student in studentList)
                 {
-                    Console.WriteLine(String.Format("{0} {1}", student.ID, student.Name));
+                    var addr = String
+                        .IsNullOrEmpty(student.Address) ? "N/A" : student.Address;
+                    Console.WriteLine(String.Format("{0,10}{1,10}{2,10}",
+                                                    student.ID,
+                                                    student.Name,
+                                                    addr));
                 }
+
+                Console.WriteLine("\n----\n");
             };
         }
 
@@ -232,7 +291,15 @@ namespace StudentManager.TextUi
             String id = Console.ReadLine();
             var s = (Student) Identity
                 .GetObjectById(this.manager.Students, id);
-            new StudentScreen(s, c, this.manager, this).Start();
+            if (s != null)
+            {
+                new StudentScreen(s, c, this.manager, this).Start();
+            }
+            else
+            {
+                Console.WriteLine("No such student!");
+                Console.ReadKey();
+            }
         }
 
         void RemoveClass()
@@ -283,6 +350,14 @@ namespace StudentManager.TextUi
             AddChoice("3", "Update student's info", ChangeInfo);
             AddChoice("B", "Back", Stop);
             AddChoice("Q", "Quit", Quit);
+
+            this.PreMenuHook += () => {
+                Console.Clear();
+                Console.WriteLine("Name: " + student.Name);
+                Console.WriteLine("ID: " + student.ID);
+                if (! String.IsNullOrEmpty(student.Address))
+                    Console.WriteLine("Address: ", student.Address);
+            };
         }
 
         public void RemoveStudent()
@@ -323,9 +398,12 @@ namespace StudentManager.TextUi
             Console.Write("Address (optional): ");
             var addr = Console.ReadLine();
 
-            student.Name = name;
-            student.ID = id;
-            student.Address = addr;
+            if (Confirm("Are you sure?"))
+            {
+                student.Name = name;
+                student.ID = id;
+                student.Address = addr;
+            }
         }
     }
 }
