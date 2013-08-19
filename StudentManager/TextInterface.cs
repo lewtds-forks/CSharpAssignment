@@ -81,7 +81,7 @@ namespace StudentManager.TextUi
                         PostActionHook();
                 } else
                 {
-                    Console.WriteLine("No such choice! Press any key to continue...");
+                    ErrorWriteLine("No such choice! Press any key to continue...");
                     Console.ReadKey();
                 }
             }
@@ -103,7 +103,7 @@ namespace StudentManager.TextUi
                 {
                     return false;
                 }
-                Console.WriteLine("No such choice!");
+                ErrorWriteLine("No such choice!");
             }
         }
 
@@ -122,6 +122,11 @@ namespace StudentManager.TextUi
                                        ConsoleColor bg=ConsoleColor.Blue)
         {
             EmphasizeWrite(message + '\n', fg, bg);
+        }
+
+        public void ErrorWriteLine(String message)
+        {
+            EmphasizeWriteLine(message, bg: ConsoleColor.Red);
         }
 
         /// <summary>
@@ -204,7 +209,7 @@ namespace StudentManager.TextUi
             }
             else
             {
-                Console.WriteLine("No such class!");
+                ErrorWriteLine("No such class!");
                 Console.ReadKey();
             }
 
@@ -297,7 +302,7 @@ namespace StudentManager.TextUi
             }
             else
             {
-                Console.WriteLine("No such student!");
+                ErrorWriteLine("No such student!");
                 Console.ReadKey();
             }
         }
@@ -322,7 +327,7 @@ namespace StudentManager.TextUi
             var name = Console.ReadLine();
             Console.Write("Teacher: ");
             var teacher = Console.ReadLine();
-            if(Confirm("Are you sure you want to change this class'  info?"))
+            if(Confirm("Are you sure you want to change this class' info?"))
             {
                 c.Name = name;
                 c.Teacher = teacher;
@@ -385,7 +390,8 @@ namespace StudentManager.TextUi
                 Stop();
             }
             else {
-                Console.WriteLine("There was an error!");
+                ErrorWriteLine("There was an error!");
+                Console.ReadKey();
             }
         }
 
