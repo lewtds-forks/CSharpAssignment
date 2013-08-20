@@ -24,8 +24,6 @@ using System.Linq;
 using System.Collections.Specialized;
 using System.Collections;
 
-
-
 namespace StudentManager.TextUi
 {
     using StudentManager.Utility;
