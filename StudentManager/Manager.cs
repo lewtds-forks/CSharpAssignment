@@ -30,7 +30,7 @@ namespace StudentManager
         { get { return this.classStudents; } }
 
         public Dictionary<String, String> UriMapping { get; set; }
-        public IPersistenceService database;
+        public IPersistenceService Database { get; set; }
 
         /// <summary>
         /// In memory constructor. All data is created fresh. Mostly for testing
@@ -46,24 +46,21 @@ namespace StudentManager
         /// <summary>
         /// Initializes with external data sources.
         /// </summary>
-        /// <param name='database'>
-        /// A database accessing object.
+        /// <param name='Database'>
+        /// A Database accessing object.
         /// </param>
         /// <param name='UriMapping'>
         /// A mapping between resources' name and their URI. The list of resources that
         /// we need is: classes, students, rooms, timeslots, classstudents, allocation.
         /// </param>
-        public Manager(IPersistenceService database, Dictionary<String, String> UriMapping)
+        public void Load()
         {
-            this.UriMapping = UriMapping;
-            this.database = database;
-
-            // FIXME What if any of the database resources isn't created yet?
-            Classes = database.load<HashSet<Class>>
+            // FIXME What if any of the Database resources isn't created yet?
+            Classes = Database.load<HashSet<Class>>
                 (UriMapping["classes"]);
-            Students = database.load<HashSet<Student>>
+            Students = Database.load<HashSet<Student>>
                 (UriMapping["students"]);
-            var _classStudents = database.load<List<ClassStudentTuple>>
+            var _classStudents = Database.load<List<ClassStudentTuple>>
                 (UriMapping["class-students"]);
 
             // These "relationships" need manual deserialization
@@ -103,9 +100,9 @@ namespace StudentManager
 
         public void Save()
         {
-            database.save<HashSet<Class>>
+            Database.save<HashSet<Class>>
                 (UriMapping["classes"], Classes);
-            database.save<HashSet<Student>>
+            Database.save<HashSet<Student>>
                 (UriMapping["students"], Students);
 
             // Custom serialization
@@ -119,7 +116,7 @@ namespace StudentManager
                 });
             }
 
-            database.save<List<ClassStudentTuple>>
+            Database.save<List<ClassStudentTuple>>
                 (UriMapping["class-students"], _classStudents);
         }
     }
